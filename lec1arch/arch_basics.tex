@@ -1,0 +1,65 @@
+\documentclass[landscape]{foils} 
+\input{../common-preamble-start}
+\input{../preamble.tex}
+\input{../common-preamble-end}
+\begin{document}
+\pagecolor{white}
+
+\myNewSlide
+\section*{What happened? (more or less)}
+\begin{compactitem}
+	\item I clicked on the Terminal.app icon in the Dock
+	\item Some device driver noted that a click had occurred.
+	\item The OS noticed
+	\item The OS checked where the cursor was
+	\item The OS did some calculations and determined that it was in the ``Dock''
+	\item The OS told the \path{Dock} process that a click had occurred.
+	\item By asking the OS and doing calculations, the \path{Dock} determined that it was the Terminal.app icon that was clicked.
+	\item The \path{Dock} process told the OS to tell the \path{Finder} to launch Terminal.app
+	\item \path{Terminal} was launched and it negotiated with the OS and \path{WindowServer} to display a ``window''.
+	\item {\color{green} The Terminal launched a process called \path{login}}
+	\item {\color{blue} \path{login} launched a process called \path{bash}}
+	\item {\color{red} \path{bash} initialized itself (by reading files such as\\ \path{/Users/mholder/.bash\_profile})}
+\end{compactitem}
+\myNewSlide
+\begin{compactitem}
+	\item {\color{red}\path{bash} wrote its prompt (the characters `$\sim$ 500 \$ ') to its standard error stream.}
+	\item {\color{green}\path{Terminal} has wrapped up bash's standard streams (input, output and error stream). When
+	it detects that bash wrote something \path{Terminal} does some OS calls to draw the characters in the window.}
+	\item {\color{red}\path{bash} told the OS through some `readNextLineOfInput' function that it wanted to read the next line from standard input.  Because there was no input, the execution of the \path{bash}'s process hangs until there is input.}
+	\item I typed `l'
+	\begin{compactenum}	
+		\item a keyboard device drive noticed the key was hit and told the OS
+		\item the OS asked the window manager what application had ``focus'' -- the answer was \path{Terminal}
+		\item The OS told the \path{Terminal} that there was a key-down event
+		\item {\color{green}The \path{Terminal} (with help of OS)  the letter `l'}
+		\item {\color{green}The \path{Terminal} wrote `l' to a stream that (via OS functions) was connected to \path{bash} standard input}
+		\item {\color{green}The \path{Terminal} displayed the letter `l' in the Window}
+		\item {\color{red}Because it was not a carriage return, the `readNextLineOfInput' function stored the character, but did not return anything to \path{bash}. So \path{bash} still has not heard anything yet.}
+	\end{compactenum}
+\end{compactitem}
+\myNewSlide
+\begin{compactitem}
+	\item I typed `s' -- same steps as for the l
+	\item I typed the `return' key -- steps 1-6 occurred as before.
+	\item {\color{red}The `readNextLineOfInput' function that \path{bash} called returned the string `ls$<$newline$>$'}
+	\item {\color{red}\path{bash} (through rules we'll talk about later) determined that `ls' means that I wanted to run the program called \path{ls} with no command line arguments.}
+	\item Via negotiations with the OS, {\color{red}\path{bash} launched \path{ls}}
+	\item Any standard input of \path{bash} will now be redirected to \path{ls}, and the standard output of \path{ls} will be written to the stream, but it will be redirected to \path{bash}'s stdandard output.
+	\item \path{ls} checked to see if it got any command line arguments (it did not).
+	\item \path{ls} asked the OS what it should use as its working directory (The OS said '/Users/mholder').
+	\item \path{ls} asked the OS to tell the contents of the file '/Users/mholder'
+	\item The OS dealt with some filesystem device driver software to get the contents and return the answer.
+	\item \path{ls} filtered out any entries in that file that started `.'
+	\item \path{ls} figured out how many characters wide its standard output was.
+	\item \path{ls} formatted the entries such that they fit nicely in the width.
+	\item \path{ls} wrote the formatted strings to its standard output.
+	\item {\color{red}That standard out gets passed to \path{bash}'s standard output}
+	\item {\color{green}\path{Terminal} is reading \path{bash}'s output, and it makes sure that the output is displayed in the window that we see.}
+	\item The \path{ls} process is exits
+	\item {\color{red}\path{bash} detects that \path{ls} exited. It writes it's prompt again.}
+	
+		
+\end{compactitem}
+
+\end{document}
