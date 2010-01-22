@@ -16,86 +16,6 @@
 \pagecolor{white}
 
 \myNewSlide
-\section*{What happened? (more or less)}
-\begin{compactitem}
-	\item I clicked on the Terminal.app icon in the Dock
-	\item Some device driver noted that a click had occurred.
-	\item The OS noticed
-	\item The OS checked where the cursor was
-	\item The OS did some calculations and determined that it was in the ``Dock''
-	\item The OS told the \path{Dock} process that a click had occurred.
-	\item By asking the OS and doing calculations, the \path{Dock} determined that it was the Terminal.app icon that was clicked.
-	\item The \path{Dock} process told the OS to tell the \path{Finder} to launch Terminal.app
-	\item \path{Terminal} was launched and {\color{green} it negotiated with the OS and \path{WindowServer} to display a window.}
-	\item {\color{green} The \path{Terminal} launched a process called \path{login}}
-	\item {\color{black} \path{login} read a history file. Based on this information it wrote a message to its standard output stream. }
-	\item {\color{green} \path{Terminal} is reading \path{login}'s output, and \path{Terminal} makes the window display the message.}
-	\item {\color{black} \path{login} launched a process called \path{bash}}
-	\item {\color{red} \path{bash} initialized itself (by reading files such as\\ \path{/Users/mholder/.bash\_profile})}
-	\item {\color{red}\path{bash} wrote its prompt (the characters `$\sim$ 500 \$ ') to its standard error stream.}
-	\item {\color{green}\path{Terminal} has wrapped up bash's standard streams (input, output and error stream). When
-	it detects that bash wrote something \path{Terminal} does some OS calls to draw the characters in the window.}
-	\item {\color{red}\path{bash} told the OS through some function we'll call ``readNextLineOfInput'' that it wanted to read the next line from standard input.  Because there was no input, the execution of the \path{bash}'s process hangs.}
-	\item I typed `l'
-	\begin{compactenum}	
-		\item a keyboard device drive noticed the key was hit and told the OS
-		\item the OS asked the window manager what application had ``focus'' -- the answer was \path{Terminal}
-		\item The OS told the \path{Terminal} that there was a key-down event
-		\item {\color{green}The \path{Terminal} (with help of OS)  the letter `l'}
-		\item {\color{green}The \path{Terminal} wrote `l' to a stream that (via OS functions) was connected to \path{bash} standard input}
-		\item {\color{green}The \path{Terminal} displayed the letter `l' in the Window}
-		\item {\color{red}Because it was not a carriage return, the `readNextLineOfInput' function stored the character, but did not return anything to \path{bash}. So \path{bash} still has not heard anything yet.}
-	\end{compactenum}
-	\item I typed `s' -- same steps as for when I typed `l'
-	\item I typed the `return' key -- steps 1-6 occurred as before.
-	\item {\color{red}The `readNextLineOfInput' function that \path{bash} called returned the string `ls$<$newline$>$'}
-	\item {\color{red}\path{bash} (through rules we'll talk about later) determined that `ls' means that I wanted to run the program called \path{ls} with no command line arguments.}
-	\item Via negotiations with the OS, {\color{red}\path{bash} launched \path{ls}}
-	\item Any standard input of \path{bash} will now be redirected to \path{ls}, and the standard output of \path{ls} will be written to the stream, but it will be redirected to \path{bash}'s stdandard output.
-	\item \path{ls} checked to see if it got any command line arguments (it did not).
-	\item \path{ls} asked the OS what it should use as its working directory (The OS said '/Users/mholder').
-	\item \path{ls} asked the OS for the contents of the file '/Users/mholder'
-	\item The OS dealt with some filesystem device driver software to get the contents and return the answer.
-	\item \path{ls} filtered out any entries in that file that started `.'
-	\item \path{ls} queried the OS to find out how many characters wide its standard output was.
-	\item \path{ls} formatted the entries such that they fit nicely in the width.
-	\item \path{ls} wrote the formatted strings to its standard output.
-	\item {\color{red}That standard out from \path{ls} is passed to \path{bash}'s standard output}
-	\item {\color{green}\path{Terminal} is reading \path{bash}'s output, and it makes sure that the output is displayed in the window that we see.}
-	\item The \path{ls} process is exits
-	\item {\color{red}\path{bash} detects that \path{ls} exited. It writes it's prompt again.}
-	\item {\color{green}\path{Terminal} displays the latest output from \path{bash}, which is the new prompt.}	
-		
-\end{compactitem}
-
-
-\myNewSlide
-\path{ls} never deals with \path{bash} (and certainly not with processes further up stream such as \path{login} or \path{Terminal}).
-\path{ls} just:
-\begin{compactitem}	
-	\item checks its command-line arguments,
-	\item asks the the operating system some context information,
-	\item composes an answer to its assigned task,
-	\item writes the answer to its standard output stream,
-	\item exits
-\end{compactitem}
-
-\myNewSlide
-\path{bash} never deals with \path{login} or \path{Terminal}.  It just:
-\begin{compactenum}	
-	\item checks its command-line arguments,
-	\item asks the the operating system some context information,
-	 \item reads a line of input from standard input,
-	\item takes the action requested,
-	\item writes ``the answer'' to through its output and error streams,
-	\item goes back to step 3
-\end{compactenum}
-
-\path{bash} is a shell that is often used to launch other processes. 
-So the ``action'' in step 4 is often: ``launch a process and redirect your streams to the new process until it exits.''
-
-
-\myNewSlide
 \begin{tikzpicture}
 \begin{scope}[node distance=10mm]
 	\node (args) [stream] {cmd line args} ;
@@ -164,6 +84,87 @@ So the ``action'' in step 4 is often: ``launch a process and redirect your strea
 \end{scope}
 \end{tikzpicture} 
 
+
+\myNewSlide
+\section*{What happened? (more or less)}
+\begin{compactitem}
+	\item I clicked on the Terminal.app icon in the Dock
+	\item Some device driver noted that a click had occurred.
+	\item The OS noticed
+	\item The OS checked where the cursor was
+	\item The OS did some calculations and determined that it was in the ``Dock''
+	\item The OS told the \path{Dock} process that a click had occurred.
+	\item By asking the OS and doing calculations, the \path{Dock} determined that it was the Terminal.app icon that was clicked.
+	\item The \path{Dock} process told the OS to tell the \path{Finder} to launch Terminal.app
+	\item \path{Terminal} was launched and {\color{green} it negotiated with the OS and \path{WindowServer} to display a window.}
+	\item {\color{green} The \path{Terminal} launched a process called \path{login}}
+	\item {\color{black} \path{login} read a history file. Based on this information it wrote a message to its standard output stream. }
+	\item {\color{green} \path{Terminal} is reading \path{login}'s output, and \path{Terminal} makes the window display the message.}
+	\item {\color{black} \path{login} launched a process called \path{bash}}
+	\item {\color{red} \path{bash} initialized itself (by reading files such as\\ \path{/Users/mholder/.bash\_profile})}
+	\item {\color{red}\path{bash} wrote its prompt (the characters `$\sim$ 500 \$ ') to its standard error stream.}
+	\item {\color{green}\path{Terminal} has wrapped up bash's standard streams (input, output and error stream). When
+	it detects that bash wrote something \path{Terminal} does some OS calls to draw the characters in the window.}
+	\item {\color{red}\path{bash} told the OS through some function we'll call ``readNextLineOfInput'' that it wanted to read the next line from standard input.  Because there was no input, the execution of the \path{bash}'s process hangs.}
+	\item I typed `l'
+	\begin{compactenum}	
+		\item a keyboard device drive noticed the key was hit and told the OS
+		\item the OS asked the window manager what application had ``focus'' -- the answer was \path{Terminal}
+		\item The OS told the \path{Terminal} that there was a key-down event
+		\item {\color{green}The \path{Terminal} (with help of OS)  the letter `l'}
+		\item {\color{green}The \path{Terminal} wrote `l' to a stream that (via OS functions) was connected to \path{bash} standard input}
+		\item {\color{green}The \path{Terminal} displayed the letter `l' in the Window}
+		\item {\color{red}Because it was not a carriage return, the `readNextLineOfInput' function stored the character, but did not return anything to \path{bash}. So \path{bash} still has not heard anything yet.}
+	\end{compactenum}
+	\item I typed `s' -- same steps as for when I typed `l'
+	\item I typed the `return' key -- steps 1-6 occurred as before.
+	\item {\color{red}The `readNextLineOfInput' function that \path{bash} called returned the string `ls$<$newline$>$'}
+	\item {\color{red}\path{bash} (through rules we'll talk about later) determined that `ls' means that I wanted to run the program called \path{ls} with no command line arguments.}
+	\item Via negotiations with the OS, {\color{red}\path{bash} launched \path{ls}}
+	\item Any standard input of \path{bash} will now be redirected to \path{ls}, and the standard output of \path{ls} will be written to the stream, but it will be redirected to \path{bash}'s stdandard output.
+	\item \path{ls} checked to see if it got any command line arguments (it did not).
+	\item \path{ls} asked the OS what it should use as its working directory (The OS said '/Users/mholder').
+	\item \path{ls} asked the OS for the contents of the file '/Users/mholder'
+	\item The OS dealt with some filesystem device driver software to get the contents and return the answer.
+	\item \path{ls} filtered out any entries in that file that started `.'
+	\item \path{ls} queried the OS to find out how many characters wide its standard output was.
+	\item \path{ls} formatted the entries such that they fit nicely in the width.
+	\item \path{ls} wrote the formatted strings to its standard output.
+	\item {\color{red}That standard out from \path{ls} is passed to \path{bash}'s standard output}
+	\item {\color{green}\path{Terminal} is reading \path{bash}'s output, and it makes sure that the output is displayed in the window that we see.}
+	\item The \path{ls} process is exits
+	\item {\color{red}\path{bash} detects that \path{ls} exited. It writes it's prompt again.}
+	\item {\color{green}\path{Terminal} displays the latest output from \path{bash}, which is the new prompt.}	
+		
+\end{compactitem}
+
+
+\myNewSlide
+\path{ls} never deals with \path{bash} (and certainly not with processes further up stream such as \path{login} or \path{Terminal}).
+\path{ls} just:
+\begin{compactitem}	
+	\item checks its command-line arguments,
+	\item figures out its working directory (asks the the operating system some context information),
+	\item composes an answer to its assigned task,
+	\item writes the answer to its standard output stream,
+	\item exits
+\end{compactitem}
+
+\myNewSlide
+\path{bash} never deals with \path{login} or \path{Terminal}.  It just:
+\begin{compactenum}	
+	\item checks its command-line arguments,
+	\item asks the the operating system some context information,
+	 \item reads a line of input from standard input,
+	\item takes the action requested,
+	\item writes ``the answer'' to through its output and error streams,
+	\item goes back to step 3
+\end{compactenum}
+
+\path{bash} is a shell that is often used to launch other processes. 
+So the ``action'' in step 4 is often: ``launch a process and redirect your streams to the new process until it exits.''
+
+
 \myNewSlide
 \section*{Shells}
 The interface to the OS and kernel is a huge number of functions -- it easy to invoke these functions in the wrong way, and their ``raw'' response is often cryptic.
@@ -184,8 +185,8 @@ Shells are simple programming language interpreters that take text that humans w
 	\item The shell is a way of creating a process from the executable and controlling the process' initial context:
 	\begin{compactenum}
 		\item Specifies command line argument for the process
-		\item You can control the environment of the process (we won't use this much) easily through a shell
-		\item The shell's working directory becomes the process's working directory.
+		\item You can control the environment of the process easily through a shell (we won't tweak the environment much in this course)
+		\item The shell's working directory becomes the process's working directory
 		\item The shell controls what happens to the process' standard streams (in, out, and err)
 		\item The shell captures the return code of the executable as the shell variable '?'
 	\end{compactenum}
@@ -193,19 +194,9 @@ Shells are simple programming language interpreters that take text that humans w
 	\item \begin{verbatim}>\end{verbatim} will redirect the standard output of a process to a file.
 	\item \begin{verbatim}2>\end{verbatim} will redirect the standard error stream of a process to a file.
 	\item \begin{verbatim}<\end{verbatim} can be used to redirect a file as standard input
+	\item \begin{verbatim}|\end{verbatim} redirects standard output of one process to standard input of another.
 \end{compactenum}
 
-\myNewSlide
-\section*{Compiled versus interpreted programming languages}
-\large
-Compiled languages:\\
-1. {\color{red} Your program} $\rightarrow$ (compiler) $\rightarrow$ executable\par
-Then you have to launch the executable:\\
-2. executable $\rightarrow$ (kernel) $\rightarrow$ running process $\rightarrow$ {\color{red} Your results}\\
-
-Interpreted languages:\\
-1. interpreter executable $\rightarrow$ (kernel) $\rightarrow$ running interpreter process\\
-2. {\color{red} Your script}  $\rightarrow$ (interpreter process) $\rightarrow$ {\color{red} Your results}
 
 \myNewSlide
 \normalsize
@@ -275,10 +266,11 @@ Interpreted languages:\\
 			\item their absolute location (always starts with \path{/} for the root of the file system), or
 			\item the path relative to the current working directory.
 		\end{compactenum}
-	\item The current directory is denoted with a dot:\path{.} 
-	\item The parent directory is denoted with a two dots:\path{..} 
+	\item The current directory is denoted with a dot \path{.} 
+	\item The parent directory is denoted with a two dots \path{..} 
 	\item The grandparent directory is :\path{../..} 
 	\item These rules for finding file paths apply to the OS library calls for opening files as well as \path{bash} (In python we'll see the same rules).
+	\item filename that start with a dot are ``hidden''
 \end{compactenum}
 
 \myNewSlide
@@ -369,6 +361,39 @@ Interpreted languages:\\
 	\item \example{cd -} takes you back to your previous working directory.
 	\item use a \example{alias shortname='long command here'} in your home directory's \path{.bash\_profile} file to make shortcuts to commonly used, but cumbersome commands (one to open a file in your preferred text editor is nice).
 	\item On Mac, \example{open filename} opens the path `filename' in whatever the Finder thinks is the appropriate application.
+\end{compactenum}
+
+
+\myNewSlide
+\large
+{\bf Software} -- instructions for a computer.\\
+{\bf A program} -- text that conforms to the definition of a programming language. The program is not written in the binary operations that the hardware can operate on.  It has to be translated into the language of the machine.\\
+{\bf Compiled languages:}\\
+1. {\color{red} Your program} $\rightarrow$ (compiler) $\rightarrow$ executable\par
+Then you have to launch the executable:\\
+2. executable $\rightarrow$ (kernel) $\rightarrow$ running process $\rightarrow$ {\color{red} Your results}\\
+{\bf Interpreted languages:}\\
+1. interpreter executable $\rightarrow$ (kernel) $\rightarrow$ running interpreter process\\
+2. {\color{red} Your script}  $\rightarrow$ (interpreter process) $\rightarrow$ {\color{red} Your results}
+
+\myNewSlide
+\section*{Python}
+\begin{compactenum}
+	\item an interpreted procedural language with good support for lots of programming tasks
+	\item free
+	\item terse, but clear syntax
+	\item platform-independent (and your python programs will be if you don't do weird things)
+	\item execution speed is slow (but that rarely matters)
+	\item mature and stable (lots of libraries, runs reliably on any modern computer)
+	\item Comes with standard \path{sys}, \path{os}, and \path{subprocess} libraries for interacting with the Operating System.
+\end{compactenum}
+
+\myNewSlide
+\section*{Memory}
+\large
+\begin{compactenum}
+	\item internally all memory is binary -- bytes on the hard disk
+	\item a semantic (interpretation) step is needed to express complex data
 \end{compactenum}
 
 \end{document}
