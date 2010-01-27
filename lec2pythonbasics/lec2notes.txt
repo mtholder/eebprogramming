@@ -1,0 +1,61 @@
+1. We can run Python interactively.
+
+2. We can treat it like a calculator.  (note diff between 3*2 and 3.0*2)
+
+3. What happens:
+	a. python parses the line into tokens, commonly a set of operations:
+		left operand, operator, right operand
+	b. The behavior of the operation depends on the type of the data.
+
+
+4. Deep inside, all memory is an big array of switchs that can be 0 or 1. We tend to think of these in convenient groups of 8 (bytes), but when we use python or other high level languages we don't tend to think of the exact memory layout much.  We can get away with this because python always knows the type of each variable.  (type examples)
+
+	Addition for two integers, is a different set of instructions on the CPU than addition of two real (floating point numbers). In lower level languages we have to be very explicit and tell the compiler whether we are adding integers or floats.  This is tedious to write and mean that our code is less generic.
+
+Python is strongly typed because every object in python's memory is tied to some indication of what type it is.  We can ask python (but rarely need to).  More importantly, it can figure out what the operations are legal base on the types of the operands.
+
+When we get to strings, there are not set rules on mathematical operations.  Python decided to implement (multiplication of string and int, which is pretty unambiguous).
+Addition of strings is allowed, but not subtraction.
+
+
+GOTCHA: 2/3 is 0 this is wart that is surprising to non-C programmers.  solution: create a float out of one of the operands.
+
+
+Thus far, it is barely more than a caluclator.
+
+Variables are a nice way of taking an object and giving it a name.
+
+Python stores all variables in one of a few structures called a dictionary.  It is just what you would expect: A data structure that allows you to take a name and find out what it refers to.
+
+In python lingo, we take an object and bind it to a name.  This means that the object exists, and then we write down an association between the name and the object.
+
+Now we can use the variable name as short hand for the object.
+
+#####################################
+radius = 2
+circum = 2*radius*3.141592653589793
+circum
+radius = 4
+circum
+
+#####################################
+
+
+Python reads
+#####################################
+radius = 2
+#####################################
+as:
+	1. Parse into tokens:
+		radius
+		=
+		2
+	2. Python recognizes the = to mean "name binding" (called assignment in other languages).
+
+	3. In a name binding operation, the right "operand" is evalauted. then the
+	LAST step is to "bind" the object(s) on the right to the name(s) on the left.
+
+	4. Name binding means "write the association of the name to the object down in a dictionary" (more on dictionaries in a sec.)
+
+QUESTION: Now lets check out the code, is it clear why circum does not change when radius
+changes?
