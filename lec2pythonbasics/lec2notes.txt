@@ -8,26 +8,46 @@
 	b. The behavior of the operation depends on the type of the data.
 
 
-4. Deep inside, all memory is an big array of switchs that can be 0 or 1. We tend to think of these in convenient groups of 8 (bytes), but when we use python or other high level languages we don't tend to think of the exact memory layout much.  We can get away with this because python always knows the type of each variable.  (type examples)
+4. Deep inside, all memory is an big array of switchs that can be 0 or 1. We
+tend to think of these in convenient groups of 8 (bytes), but when we use python
+or other high level languages we don't tend to think of the exact memory layout
+much.  We can get away with this because python always knows the type of each
+variable.  (type examples)
 
-	Addition for two integers, is a different set of instructions on the CPU than addition of two real (floating point numbers). In lower level languages we have to be very explicit and tell the compiler whether we are adding integers or floats.  This is tedious to write and mean that our code is less generic.
+	Addition for two integers, is a different set of instructions on the CPU
+than addition of two real (floating point numbers). In lower level languages we
+have to be very explicit and tell the compiler whether we are adding integers or
+floats.  This is tedious to write and mean that our code is less generic.
 
-Python is strongly typed because every object in python's memory is tied to some indication of what type it is.  We can ask python (but rarely need to).  More importantly, it can figure out what the operations are legal base on the types of the operands.
+Python is strongly typed because every object in python's memory is tied to some
+indication of what type it is.  We can ask python (but rarely need to).  More
+importantly, it can figure out what the operations are legal base on the types
+of the operands.
 
-When we get to strings, there are not set rules on mathematical operations.  Python decided to implement (multiplication of string and int, which is pretty unambiguous).
+When we get to strings, there are not set rules on mathematical operations.
+Python decided to implement (multiplication of string and int, which is pretty
+unambiguous).
 Addition of strings is allowed, but not subtraction.
 
 
-GOTCHA: 2/3 is 0 this is wart that is surprising to non-C programmers.  solution: create a float out of one of the operands.
+GOTCHA: 2/3 is 0 this is wart that is surprising to non-C programmers.
+solution: create a float out of one of the operands.
 
 
 Thus far, it is barely more than a caluclator.
 
+
+#variables
+
 Variables are a nice way of taking an object and giving it a name.
 
-Python stores all variables in one of a few structures called a dictionary.  It is just what you would expect: A data structure that allows you to take a name and find out what it refers to.
+Python stores all variables in one of a few structures called a dictionary.  It
+is just what you would expect: A data structure that allows you to take a name
+and find out what it refers to.
 
-In python lingo, we take an object and bind it to a name.  This means that the object exists, and then we write down an association between the name and the object.
+In python lingo, we take an object and bind it to a name.  This means that the
+object exists, and then we write down an association between the name and the
+object.
 
 Now we can use the variable name as short hand for the object.
 
@@ -50,12 +70,147 @@ as:
 		radius
 		=
 		2
-	2. Python recognizes the = to mean "name binding" (called assignment in other languages).
+	2. Python recognizes the = to mean "name binding" (called assignment in
+other languages).
 
 	3. In a name binding operation, the right "operand" is evalauted. then the
-	LAST step is to "bind" the object(s) on the right to the name(s) on the left.
+	LAST step is to "bind" the object(s) on the right to the name(s) on the
+left.
 
-	4. Name binding means "write the association of the name to the object down in a dictionary" (more on dictionaries in a sec.)
+Name binding means "write the association of the name to the object down in a
+dictionary" (more on dictionaries in a sec.)
 
-QUESTION: Now lets check out the code, is it clear why circum does not change when radius
-changes?
+QUESTION: Now lets check out the code, is it clear why circum does not change
+when radius changes?
+
+Trickier:
+	another_variable = radius
+	print radius
+	print another_variable
+	radius = 10
+	print radius
+	print another_variable
+Python is always creating objects (based on our commands) Many of them are
+ephemeral, and invisible to us.  Name binding is a way to store a reference to
+an object, but when we reuse a variable name in another binding operation we are
+reassigning the name -- we are NOT affecting the original object in any way.
+
+>Lost Objects
+We don't normally use the locals function, but we can just to see what names
+python knows about. The curly braces are how python denotes dictionaries.
+
+Note that if we don't bind the object that is created as the result of an
+operation, then it "slips through the fingers" and is lost
+
+#dynamictyping
+We tend to think of our names as being synonymous with our variables, but it is
+important to realize that they are actually just lightweight handles to the objects.  The objects are where all of the action is:
+radius is an int.
+if we say radius = 'blah' then type(radius) says str for string.  The information about what type an object is represents is stored within the object.
+You can rebind the name to an object of a different type.
+
+
+#functions.
+Thus far we have basically just done simple operations and assigned names -- nothing more sophisticated than a spreadsheet (albeit with different syntax).
+
+An important advance is to be able to store functions -- a series of operations that we can reuse.  This is basically like the macro functionality of Excel:
+
+
+#####################################
+def calc_circumference(radius):
+    circumference =  2*radius*3.141592653589793
+    return circumference
+#####################################
+
+as:
+	1. "def" means that we are going to create an function,
+	2. (radius) means that the object will take one object as an argument,
+	3. create a function blob.  bind the name radius to the object that is passed in as the argument
+	4. : means here comes the rest of the function definition -- expect the next line to be indented! (notice that the prompt changes from >>> to ...)
+	5. "    circum =  2*radius*3.141592653589793" is a Python line. It is indented, so it is part of the function that is being written.  This means that the python interpretter does a simple parse of it but does NOT execute
+	the operations (in this case python would detect that the line will create the variable "circum" within the scope of the function)
+	6. "    return circum" is another Python line.  When we execute the function and come to this line the python interpreter will understand that we should
+	stop executing the function and return to the calling context.  The object
+	that circum refers to should be treated as the resulting object of the function call.
+	7. "" a line without indentation means that the function is finished.
+	8. Now python takes the function blob that was just created and binds it to the name "calc_circumference"
+
+Notice that nothing obvious happened when we finished.
+
+We can see that we have a new object -- the name calc_circumference now refers to something that is of type 'function'
+
+The function's internal variable 'circumference' is not known for two reasons:
+	1. we have not executed the function yet -- we have just defined it
+	2. circumference is a variable in the scope of the function.
+
+The indented code block is on hold until we invoke it, referred to as "calling the function"
+
+#####################################
+calc_circumference(2)
+#####################################
+is a python expression the evalutation by python is:
+	1. get the object the name 'calc_circumference' refers to
+	2. note that the parentheses, we are going to "call" this object
+	3. figure out what object should be passed in as the arguments
+	4. Jump to execution of the function blob referred to by 'calc_circumference', pass in the objects that you identified in the previous steps as the arguments.
+	5. continue executing the function until its end, and treat the returned
+	object as the result
+
+Note that the returned object is just a normal float (there is no connection any more to the function). The fact that it was created in a function makes no difference, also note that the name that it had in the function 'circumference'
+is no longer attached to it.  That name had a scope of the function only.
+
+This is _REALLY_ nice it means that we can write a set of operations down and execute them later.  We don't have to worry about name clashes because python "scopes" the names to as local a domain as possible.
+
+Just to be pedantic we can modify the function so that it prints out it's local "namespace" when it executes
+
+A well-written function uses its own scope (which includes its argument, and it is independent of the code that calls it).
+
+#####################################
+If we use multiple arguments they are separated by commas.  This time we'll start the function with a string. this is the docstring.  If we use the help function we'll see the doc string ('q' to exit help)
+
+
+#####################################
+
+We still are at the level of simple macros -- to have a real language, we have to have logical operations -- flow control
+
+checker is a simple function, notice that it uses logical statements
+"if" means:
+	1. check the following condition.  If it is True, then execute the following
+	 block of code.  If it is False then execute the code in the "else" block
+	2. ":" means here comes a block of code -- expect it to be indented.
+	3. when the indentation level returns to the previous level, we have finished the block of code that is conditionally executed.
+
+
+elif statements can be inserted you have more than two possible "branches" of code.
+
+One thing computers are great at are repeating operations. this brings us to the subject of collections and loops.
+in addition to string, float, and ints, python has some more fundamental types:
+	- Boolean type True or False
+	- lists
+A list is just another object, in python. but it can hold references to many other objects.
+range is a function that returns us a list of consecutive integers.
+or we can add or multiply to grow lists.
+
+To get a reference to a object in a list we dereference or index the list with
+[]
+this is used for replacing an element in a list or just get obtain a reference.
+
+list objects also have methods.  methods are like functions, but we invoke them with an object.  Typically the method acts on the object (or accesses information from the object).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
