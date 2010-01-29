@@ -2,10 +2,11 @@
 5 + 2.3
 3*2
 3.0*2
-3.5*10 + 7
-3.5*(10 + 7)
+3.0*10 + 7
+2.5*(10 + 8)
 # strings
 "hello"
+'hi again'
 'hello there, "world"!'
 print 'hello, there world'
 print """This
@@ -79,6 +80,7 @@ def calc_circumference_verbose(radius):
     circumference =  2*radius*3.141592653589793
     print locals()
     return circumference
+
 locals()
 calc_circumference_verbose()
 #multiargs
@@ -86,6 +88,7 @@ def square_prism_volume(square_length, height):
     """Returns the volume of a rectangular prism with two sides that have a
     length of `square_length`. The length in the third dimension is `height`."""
     return square_length*square_length*height
+
 help(square_prism_volume)
 square_prism_volume(4, 10)
 square_prism_volume(10, 4)
@@ -94,6 +97,7 @@ def prism_volume(x, y, z):
     """Returns the volume of a rectangular prism with side lengths `x`, `y`, and `z`"""
     print "x =", x, ", y =", y, ", z =", z
     return x*y*z
+
 prism_volume(1,2,3)
 prism_volume(1,z=2,y=3)
 prism_volume(z=2,y=3,1)
@@ -107,6 +111,7 @@ def checker(x, y):
     else:
         print x, 'is not bigger than', y
         return y
+
 bigger = checker(4, 6)
 print(bigger)
 
@@ -120,6 +125,7 @@ def better_checker(x, y):
     else:
         print x, 'is smaller than', y
         return y
+
 better_checker(4, 4)
 better_checker(4, 4.5)
 better_checker(y=4, x=1)
@@ -172,15 +178,58 @@ a, b = 10.1, 4
 #iteration
 for i in x:
     print i
+
 for i in range(10):
     print i
     print calc_circumference(i)
+
 for abc in "hello, there":
 	print abc
+
 from_string = list("here is a string")
-print abc
+print from_string
+from_list = str(from_string)
+print from_list
+from_list = "".join(from_string)
+print from_list
+from_list = ", ".join(from_string)
+print from_list
+from_list = " ANY OLD STRING WORKS ".join(from_string)
+print from_list
+x = "0123456789"
+x[1]
+x[2:6]
+x = ''
+while x != 'N':
+    response = raw_input("Would you like to see this prompt again?")
+    x = response.upper()
+
+x = "hi"
+x.upper()
+print x
+while True:
+    response = raw_input("Would you like to see this prompt again?")
+    x = response.upper()
+    if x == 'N' or x == 'NO':
+        break
+
+
 def calc_num_attachment_points(n):
     return 2*n - 3
+
 for i in range(3, 101):
     num_attachments = calc_num_attachment_points(i)
     print i, num_attachments
+
+genetic_code = {'GUC': 'V', 'ACC': 'T', 'GUA': 'V', 'GUG': 'V', 'ACU': 'T', 'AAC': 'N', 'CCU': 'P', 'UGG': 'W', 'AGC': 'S', 'AUC': 'I', 'CAU': 'H', 'AAU': 'N', 'AGU': 'S', 'GUU': 'V', 'CAC': 'H', 'ACG': 'T', 'CCG': 'P', 'CCA': 'P', 'ACA': 'T', 'CCC': 'P', 'UGU': 'C', 'GGU': 'G', 'UCU': 'S', 'GCG': 'A', 'UGC': 'C', 'CAG': 'Q', 'GAU': 'D', 'UAU': 'Y', 'CGG': 'R', 'UCG': 'S', 'AGG': 'R', 'GGG': 'G', 'UCC': 'S', 'UCA': 'S', 'UAA': '*', 'GGA': 'G', 'UAC': 'Y', 'GAC': 'D', 'UAG': '*', 'AUA': 'I', 'GCA': 'A', 'CUU': 'L', 'GGC': 'G', 'AUG': 'M', 'CUG': 'L', 'GAG': 'E', 'CUC': 'L', 'AGA': 'R', 'CUA': 'L', 'GCC': 'A', 'AAA': 'K', 'AAG': 'K', 'CAA': 'Q', 'UUU': 'F', 'CGU': 'R', 'CGC': 'R', 'CGA': 'R', 'GCU': 'A', 'GAA': 'E', 'AUU': 'I', 'UUG': 'L', 'UUA': 'L', 'UGA': '*', 'UUC': 'F'}
+genetic_code['UUU']
+genetic_code['UGA']
+genetic_code['AUG']
+for key, value in genetic_code.iteritems():
+    print key, "-->", value
+
+'AUG' in genetic_code
+"not a codon" in genetic_code
+genetic_code[10] = 'strange'
+genetic_code.keys()
+genetic_code.values()

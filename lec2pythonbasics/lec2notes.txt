@@ -307,7 +307,15 @@ for abc in "hello, there":
 
 We can actually create a list from any iterable.
 
+WART: to get a string from a list, we usually want the a string's join method.
+but notice that
+
+a while loop is like a combination of "if" and "for."  It defines a block of code to repeatedly execute, but the stopping condition is a boolean evaluation (that follows the same rules as the condition evaluation for "if" statements).
+
+Sometimes a "break" statement is helpful, rather than putting the condition in the while statement itself (this is usually helpful if there are multiple possible ways to exit a loop and writing them all in a single condition would be cumbersome.
+
 Let's do something vaguely biological:  If you add a new leaf to a phylogenetic tree with n leaves there are 2*n - 3 attachement points where we could add the new leaf.  How does that number look for a range of values for n? (ok, so it's pretty obvious that it looks like a straight line with slope 2 and intercept of -3, but bear with us we are learning programming).
+
 
 
 
