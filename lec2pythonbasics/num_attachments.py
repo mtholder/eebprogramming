@@ -1,6 +1,10 @@
 #!/usr/bin/env python
 import sys
 
+program_name = sys.argv[0]
+if len(sys.argv) > 3 or len(sys.argv) < 2:
+    sys.exit(program_name + ": Expecting two arguments: <num_taxa> [filename]")
+
 
 upper_limit = int(sys.argv[1])
 
