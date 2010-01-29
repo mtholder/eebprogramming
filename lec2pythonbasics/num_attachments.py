@@ -1,9 +1,12 @@
 #!/usr/bin/env python
 import sys
 
-output_stream = open('a', 'w')
 
 upper_limit = int(sys.argv[1])
+
+filename = sys.argv[2]
+output_stream = open(filename, 'w')
+
 
 def calc_num_attachment_points(n):
     return 2*n - 3
