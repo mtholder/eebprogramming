@@ -314,12 +314,53 @@ a while loop is like a combination of "if" and "for."  It defines a block of cod
 
 Sometimes a "break" statement is helpful, rather than putting the condition in the while statement itself (this is usually helpful if there are multiple possible ways to exit a loop and writing them all in a single condition would be cumbersome.
 
+
+###########################
 Let's do something vaguely biological:  If you add a new leaf to a phylogenetic tree with n leaves there are 2*n - 3 attachement points where we could add the new leaf.  How does that number look for a range of values for n? (ok, so it's pretty obvious that it looks like a straight line with slope 2 and intercept of -3, but bear with us we are learning programming).
 
 
+git checkout 1be33051771aadfd
+git checkout 093c4ea51
+git checkout 634c70fc03a17
+git checkout 1036cabca962491a
+git checkout 3a23b4414db
+git checkout 1ed9aa367701
 
 
 
+# being UNIX-y pays off, we can write cool bash commands like this (don't worry
+about this if you don't want to learn bash well -- but do appreciate how the same concepts (for loops, use of standard input, output...) are common to multiple programming languages.
+
+for (( i=3 ; i < 200 ; ++i)) ;
+do
+	echo -n "$i "
+	python num_attachments.py $i | python product.py 1
+done
+
+
+###########################
+
+
+We've mentioned that python looks up names in dictionaries (called locals and globals), but dict is also an important datatype in python.
+
+You can think of it as a generic extension of a list but instead of mapping integers to objects it maps any (hashable) "key" to an object.  It is not quite the same, though.  If you want to be able to refer to element 5 million in a list, then you have to have a list with at least 5,000,001 elements.  dicts actually create slots for objects as you index them.
+
+{key : value, another_key : some_value}
+
+iteritems lets us walk through the dict, but not in any defined order!
+
+"in" returns True if a key is in a list and False otherwise.
+Note that many keys can refer to the same object, but each key has only one value.
+
+If we need a key to refer to a collection of values we can always put a list object into the dictionary.
+
+We can actually do some useful things now.  We can create a reverse lookup for a dictionary...
+
+
+Notice that a side effect of:
+	- each key in a dict maps to exactly one object
+	- no key can be repeated in a dict
+that if we ignore the values in a dict, then we have "set". Sets are useful, and are actually a builtin python type
 
 
 

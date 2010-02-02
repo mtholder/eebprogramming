@@ -1,0 +1,30 @@
+################################################################################
+Installation tools:
+################################################################################
+download:
+
+pip from http://pypi.python.org/pypi/pip
+
+or
+
+easy_install which is part of the setuptools package http://pypi.python.org/pypi/setuptools#id2
+
+
+
+On Mac:
+	tar xfvz pip-0.6.3.tar.gz
+	cd pip-0.6.3
+	python setup.py build
+	python setup.py install
+
+	(if you get a permissions error, then you'll have to use:
+		sudo python setup.py install
+	and then enter your password)
+
+################################################################################
+Install paste
+################################################################################
+
+$ pip install  paste
+
+(or "easy_install" instead of pip)
