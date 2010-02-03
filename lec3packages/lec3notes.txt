@@ -1,5 +1,5 @@
 ################################################################################
-Installation tools:
+1. Installation tools:
 ################################################################################
 download:
 
@@ -12,19 +12,102 @@ easy_install which is part of the setuptools package http://pypi.python.org/pypi
 
 
 On Mac:
-	tar xfvz pip-0.6.3.tar.gz
-	cd pip-0.6.3
-	python setup.py build
-	python setup.py install
+    tar xfvz pip-0.6.3.tar.gz
+    cd pip-0.6.3
+    python setup.py build
+    python setup.py install
 
-	(if you get a permissions error, then you'll have to use:
-		sudo python setup.py install
-	and then enter your password)
+    (if you get a permissions error, then you'll have to use:
+        sudo python setup.py install
+    and then enter your password)
 
 ################################################################################
-Install paste
+2. Install paste
 ################################################################################
 
 $ pip install  paste
 
 (or "easy_install" instead of pip)
+
+
+
+################################################################################
+3. Using paster to give you a template for a python package
+################################################################################
+$ paster create --help
+$ paster create --list-templates
+$ paster create --help
+
+pick a name for the python package that you would like to use for the semester.
+Throughout the rest of this document substitute that name for the string
+YOUR_PACKAGE_NAME.  Make sure the name is reasonably short, has no strange
+letters, and is not obscene (we'll be pushing this to github at some point, so
+it will be publicly visible).
+
+$ paster create  YOUR_PACKAGE_NAME
+
+then answer the questions (you'll be able to replace the answers later so don't
+sweat it if you can't think up a good description).
+
+
+
+################################################################################
+4. Designate as test suite
+################################################################################
+add:
+    test_suite='YOUR_PACKAGE_NAME.tests'
+to the arguments of "setup"
+
+
+create the file YOUR_PACKAGE_NAME/tests/__init__.py
+and paste in the content:
+################################################################################
+import unittest
+class TestFactorial(unittest.TestCase):
+    pass
+################################################################################
+
+
+Now you should be able to test the package that we have created:
+
+$ python setup.py test
+
+
+################################################################################
+5. Write a real test
+################################################################################
+replace:
+
+    pass
+
+with:
+
+    def test_basic(self):
+        from YOUR_PACKAGE_NAME import factorial
+        self.assertEqual(factorial(0), 1)
+        self.assertEqual(factorial(1), 1)
+        self.assertEqual(factorial(2), 2)
+        self.assertEqual(factorial(3), 6)
+        self.assertEqual(factorial(4), 24)
+
+Now your tests should fail because we have not written the function factorial in
+the module "YOUR_PACKAGE_NAME"
+
+
+################################################################################
+5. Open YOUR_PACKAGE_NAME/__init__.py
+################################################################################
+
+and write a function that takes one argument and returns the factorial of that
+number
+...
+
+keep working on the function until the tests pass...
+
+
+add the line
+        self.assertEqual(factorial(4), 25)
+to your tests and rerun them. This will give you a feel for what a failed test
+look like.  change the test to a valid assertion again.
+
+
