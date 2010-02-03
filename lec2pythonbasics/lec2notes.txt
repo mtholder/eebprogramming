@@ -1,4 +1,5 @@
-################################################################################* Note: some of this information is simplified for presentation and glosses over
+################################################################################
+* Note: some of this information is simplified for presentation and glosses over
 the details (particularly the discussion of scoping of variables) remember that
 this was written for an introductory programming course.  If you want to know
 the technicalities of Python parsing, then don't use this as your reference!
@@ -47,7 +48,8 @@ error).
 GOTCHA: 2/3 is 0 this is wart that is surprising to non-C programmers.
 solution: create a float out of one of the operands.
 
-Unusual: % is a modulo operator.  It returns the remainder.  This is mainly used in an expression like
+Unusual: % is a modulo operator.  It returns the remainder.  This is mainly used
+in an expression like
  X % Y
 which will evaluate to 0 if X is a multiple of Y.
 
@@ -98,9 +100,11 @@ other languages).
 	LAST step is to "bind" the object(s) on the right to the name(s) on the
 left.
 
-Remember: Name binding means "write the association of the name to the object down in a dictionary" (more on dictionaries in a sec.)
+Remember: Name binding means "write the association of the name to the object
+down in a dictionary" (more on dictionaries in a sec.)
 
-In the statement "radius = 1.5*4" radius is not set equal to 1.5 and then multiplied by 4.  Instead,:
+In the statement "radius = 1.5*4" radius is not set equal to 1.5 and then
+multiplied by 4.  Instead,:
 	- the object 1.5 is created,
 	- the object 4 is created
 	- the operation "product" is executed, returning a new object with value 6.0
@@ -128,12 +132,17 @@ reassigning the name -- we are NOT affecting the original object in any way.
 ---------------------
 
 >Lost Objects
-We don't normally use the 'locals' function that often when we program, but it is useful if we want to see what names python knows about. The curly braces are how python denotes dictionaries (more on these later)
+We don't normally use the 'locals' function that often when we program, but it
+is useful if we want to see what names python knows about. The curly braces are
+how python denotes dictionaries (more on these later)
 
 Note that if we don't bind the object that is created as the result of an
 operation, then it "slips through the fingers" and is lost
 
-In the course of executing a statement, if python sees something that is a variable name (not a number, keyword, or string literal).  It checks locals and globals dictionaries to see if it should know this name.  If not a NameError occcurs.
+In the course of executing a statement, if python sees something that is a
+variable name (not a number, keyword, or string literal).  It checks locals and
+globals dictionaries to see if it should know this name.  If not a NameError
+occcurs.
 
 
 #dynamictyping
@@ -145,7 +154,10 @@ if we say radius = 'blah' then type(radius) says str for string.  The
 information about what type an object is represents is stored within the object.
 You can rebind the name to an object of a different type.
 
-This confuses C programmers.  In python names are sort of like C pointers, but in C a pointer to an integer is different from a pointer to a float -- these pointers always have the type.  In python the names are ways to look up the variables, and the variables "know" what type they are.
+This confuses C programmers.  In python names are sort of like C pointers, but
+in C a pointer to an integer is different from a pointer to a float -- these
+pointers always have the type.  In python the names are ways to look up the
+variables, and the variables "know" what type they are.
 In C the labels know what type the data is.
 In Python the labels are ignorant, arbitrary shorthand for the objects.
 
@@ -163,17 +175,29 @@ def calc_circumference(radius):
     return circumference
 #####################################
 
-This is a simple function definition.  I think that we can all see that it calculates a circle's radius using the formula 2*pi*r
+This is a simple function definition.  I think that we can all see that it
+calculates a circle's radius using the formula 2*pi*r
 
-Let's unpack what python does when it reads this.  It is simple but the details help us see how the language works.  Python sees this as:
+Let's unpack what python does when it reads this.  It is simple but the details
+help us see how the language works.  Python sees this as:
 	1. "def" means that we are going to create an function,
 	2. (radius) means that the object will take one object as an argument,
-	3. create a function blob. Insert the necessary instructions into it so that when the function is "called" with an argument, we bind the name 'radius' to the object that is passed in as the argument,
-	4. ':' means here comes the rest of the function definition -- expect the next line to be indented! (notice that the prompt changes from >>> to ...)
+	3. create a function blob. Insert the necessary instructions into it so that
+when the function is "called" with an argument, we bind the name 'radius' to the
+object that is passed in as the argument,
+	4. ':' means here comes the rest of the function definition -- expect the
+next line to be indented! (notice that the prompt changes from >>> to ...)
 	5. "    circum =  2*radius*3.141592653589793" is a Python line. It is
 indented, so it is part of the function that is being written.  This means that
-the python interpretter does a simple parse of it but does NOT execute the instructions yet -- we are just defining the function we are not calling it. (in this case python would detect that the line will create the variable "circumference" within the scope of the function).
-	6. "    return circumference" is another Python line.  When we execute the function and come to this line the python interpreter will understand that we should stop executing the function and return to the calling context.  The object that 'circumference' refers to should be treated as the resulting object of the function call.
+the python interpretter does a simple parse of it but does NOT execute the
+instructions yet -- we are just defining the function we are not calling it. (in
+this case python would detect that the line will create the variable
+"circumference" within the scope of the function).
+	6. "    return circumference" is another Python line.  When we execute the
+function and come to this line the python interpreter will understand that we
+should stop executing the function and return to the calling context.  The
+object that 'circumference' refers to should be treated as the resulting object
+of the function call.
 	7. "" a line without indentation means that the function is finished.
 	8. Now python takes the function blob that was just created and binds it to
 the name "calc_circumference"
@@ -200,7 +224,8 @@ is a python expression the evalutation by python is:
 	4. Jump to execution of the function blob referred to by
 'calc_circumference', pass in the objects that you identified in the previous
 steps as the arguments.
-	5. continue executing the function instructions until its end of the function, and treat the returned object as the result
+	5. continue executing the function instructions until its end of the
+function, and treat the returned object as the result
 
 Note that the returned object is just a normal float (there is no connection any
 more to the function). The fact that it was created in a function makes no
@@ -248,7 +273,9 @@ One thing computers are great at are repeating operations. this brings us to the
 subject of collections and loops.
 
 in addition to string, float, and ints, python has some more fundamental types:
-	- Boolean type True or False.  We can call the bool function to create a variable as a boolean from most types (0 is False, other numbers are True; the empty string is False, all other strings are True)
+	- Boolean type True or False.  We can call the bool function to create a
+variable as a boolean from most types (0 is False, other numbers are True; the
+empty string is False, all other strings are True)
 	- None - a special object (of type NoneType that represents the concept of
 	undefined.
 	- lists
@@ -276,13 +303,22 @@ a.sort()
 #####################################
 
 This is an example of object-oriented programming (more on this next week).  The
-gist of it is that list class, has its own behaviors.  These methods are basically functions that are specific to the type (list, in this case). Imagine that you were going to write a function called list.  It might be intimidating to do this if your function had to work with every imaginable data type in python, but you might be able to write an efficient sort function if you *knew* that it was only going to be called on an instance of a list.  This is an advantage of writing a method rather than a function (we'll gloss over the fact, that it is actually pretty easy to write a simple function like 'sort' in a very generic way such that it would work with many types of data).
+gist of it is that list class, has its own behaviors.  These methods are
+basically functions that are specific to the type (list, in this case). Imagine
+that you were going to write a function called list.  It might be intimidating
+to do this if your function had to work with every imaginable data type in
+python, but you might be able to write an efficient sort function if you *knew*
+that it was only going to be called on an instance of a list.  This is an
+advantage of writing a method rather than a function (we'll gloss over the fact,
+that it is actually pretty easy to write a simple function like 'sort' in a very
+generic way such that it would work with many types of data).
 
 We can reverse a 'list' and do other things.  How do we find out what we can do?
 dir or help
 
 
-lists are a great way to keep track of lots of objects without inventing lots of names.
+lists are a great way to keep track of lots of objects without inventing lots of
+names.
 To get a reference to a object in a list we dereference or index the list with
 [] note that this returns an element or group of elements.
 
@@ -292,15 +328,21 @@ Note that when you access a list, you don't alter it.
 
 ###########
 #iteration
-Often we want to repeat an action many times.  The "for" loop is the normal way to do this
+Often we want to repeat an action many times.  The "for" loop is the normal way
+to do this
 
 for i in x:
 	print i
 
 
-Note that the indented block is just like an "if" block or a function body.  So the action "print i" is going to happen for every iteration through the "for" loop.  The intro to the for block unpacks to "walk through every element in x. For each element inside x call it i and then execute the following block"
+Note that the indented block is just like an "if" block or a function body.  So
+the action "print i" is going to happen for every iteration through the "for"
+loop.  The intro to the for block unpacks to "walk through every element in x.
+For each element inside x call it i and then execute the following block"
 
-Actually for loops are more general thin just walking through lists.  Anything that is "iterable" can go in a for loop.  We actually have already encountered another iterable:
+Actually for loops are more general thin just walking through lists.  Anything
+that is "iterable" can go in a for loop.  We actually have already encountered
+another iterable:
 
 for abc in "hello, there":
 	print abc
@@ -310,13 +352,22 @@ We can actually create a list from any iterable.
 WART: to get a string from a list, we usually want the a string's join method.
 but notice that
 
-a while loop is like a combination of "if" and "for."  It defines a block of code to repeatedly execute, but the stopping condition is a boolean evaluation (that follows the same rules as the condition evaluation for "if" statements).
+a while loop is like a combination of "if" and "for."  It defines a block of
+code to repeatedly execute, but the stopping condition is a boolean evaluation
+(that follows the same rules as the condition evaluation for "if" statements).
 
-Sometimes a "break" statement is helpful, rather than putting the condition in the while statement itself (this is usually helpful if there are multiple possible ways to exit a loop and writing them all in a single condition would be cumbersome.
+Sometimes a "break" statement is helpful, rather than putting the condition in
+the while statement itself (this is usually helpful if there are multiple
+possible ways to exit a loop and writing them all in a single condition would be
+cumbersome.
 
 
 ###########################
-Let's do something vaguely biological:  If you add a new leaf to a phylogenetic tree with n leaves there are 2*n - 3 attachement points where we could add the new leaf.  How does that number look for a range of values for n? (ok, so it's pretty obvious that it looks like a straight line with slope 2 and intercept of -3, but bear with us we are learning programming).
+Let's do something vaguely biological:  If you add a new leaf to a phylogenetic
+tree with n leaves there are 2*n - 3 attachement points where we could add the
+new leaf.  How does that number look for a range of values for n? (ok, so it's
+pretty obvious that it looks like a straight line with slope 2 and intercept of
+-3, but bear with us we are learning programming).
 
 
 git checkout 1be33051771aadfd
@@ -329,7 +380,9 @@ git checkout 1ed9aa367701
 
 
 # being UNIX-y pays off, we can write cool bash commands like this (don't worry
-about this if you don't want to learn bash well -- but do appreciate how the same concepts (for loops, use of standard input, output...) are common to multiple programming languages.
+about this if you don't want to learn bash well -- but do appreciate how the
+same concepts (for loops, use of standard input, output...) are common to
+multiple programming languages.
 
 for (( i=3 ; i < 200 ; ++i)) ;
 do
@@ -341,26 +394,37 @@ done
 ###########################
 
 
-We've mentioned that python looks up names in dictionaries (called locals and globals), but dict is also an important datatype in python.
+We've mentioned that python looks up names in dictionaries (called locals and
+globals), but dict is also an important datatype in python.
 
-You can think of it as a generic extension of a list but instead of mapping integers to objects it maps any (hashable) "key" to an object.  It is not quite the same, though.  If you want to be able to refer to element 5 million in a list, then you have to have a list with at least 5,000,001 elements.  dicts actually create slots for objects as you index them.
+You can think of it as a generic extension of a list but instead of mapping
+integers to objects it maps any (hashable) "key" to an object.  It is not quite
+the same, though.  If you want to be able to refer to element 5 million in a
+list, then you have to have a list with at least 5,000,001 elements.  dicts
+actually create slots for objects as you index them.
 
 {key : value, another_key : some_value}
 
 iteritems lets us walk through the dict, but not in any defined order!
 
 "in" returns True if a key is in a list and False otherwise.
-Note that many keys can refer to the same object, but each key has only one value.
+Note that many keys can refer to the same object, but each key has only one
+value.
 
-If we need a key to refer to a collection of values we can always put a list object into the dictionary.
+If we need a key to refer to a collection of values we can always put a list
+object into the dictionary.
 
-We can actually do some useful things now.  We can create a reverse lookup for a dictionary...
+We can actually do some useful things now.  We can create a reverse lookup for a
+dictionary...
 
 
 Notice that a side effect of:
 	- each key in a dict maps to exactly one object
 	- no key can be repeated in a dict
-that if we ignore the values in a dict, then we have "set". Sets are useful, and are actually a builtin python type
+that if we ignore the values in a dict, then we have "set". Sets are useful, and
+are actually a builtin python type
+
+
 
 
 
