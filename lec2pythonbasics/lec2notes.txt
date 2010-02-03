@@ -326,6 +326,33 @@ This is used for replacing an element in a list or just get obtain a reference.
 
 Note that when you access a list, you don't alter it.
 
+
+
+tuples are like lists but they are denoted with () instead of [].  We won't
+worry too much about them.  The main difference is that you cannot change the
+elements of a tuple.  So this works:
+
+a = [1,5,3]
+a[0] = "hi"
+
+but this does NOT:
+
+a = (1,5,3)
+a[0] = "hi"
+
+If you are just accessing elements in a collection, then tuples and lists behave
+identically. So all of this works:
+
+
+a = [1,5,3]
+b = (1,5,3)
+print (a[0])
+print (b[0])
+
+
+
+
+
 ###########
 #iteration
 Often we want to repeat an action many times.  The "for" loop is the normal way
