@@ -172,36 +172,43 @@ x[0:5]
 x[1:5]
 print x
 x[0] = 1.3
+print x
 y = ["a", 5.2, 3]
 a, b, c = y
+print a, b, c
 a, b = 10.1, 4
+print a
+print b
 #iteration
 for i in x:
     print i
 
+def calc_circumference(radius):
+    circumference =  2*radius*3.141592653589793
+    return circumference
+
 for i in range(10):
-    print i
-    print calc_circumference(i)
+    print i, calc_circumference(i)
 
 for abc in "hello, there":
 	print abc
 
-from_string = list("here is a string")
-print from_string
-from_list = str(from_string)
-print from_list
-from_list = "".join(from_string)
-print from_list
-from_list = ", ".join(from_string)
-print from_list
-from_list = " ANY OLD STRING WORKS ".join(from_string)
-print from_list
+list_from_string = list("here is a string")
+print list_from_string
+str_from_list = str(list_from_string)
+str_from_list
+str_from_list = "".join(list_from_string)
+print str_from_list
+str_from_list = ", ".join(list_from_string)
+print str_from_list
+str_from_list = " ANY OLD STRING WORKS ".join(list_from_string)
+print str_from_list
 x = "0123456789"
 x[1]
 x[2:6]
 x = ''
 while x != 'N':
-    response = raw_input("Would you like to see this prompt again?")
+    response = raw_input("Would you like to see this prompt again? ")
     x = response.upper()
 
 x = "hi"
