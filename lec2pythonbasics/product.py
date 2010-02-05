@@ -2,7 +2,7 @@
 import sys
 program_name = sys.argv[0]
 if len(sys.argv) > 3 or len(sys.argv) < 2:
-    sys.exit(program_name + ": Expecting two arguments: <filename> <column index>")
+    sys.exit(program_name + ": Expecting two arguments: <column index> [filename]")
 
 col_index = int(sys.argv[1])
 
