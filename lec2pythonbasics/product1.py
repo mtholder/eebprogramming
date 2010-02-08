@@ -1,13 +1,23 @@
 #!/usr/bin/env python
 import sys
-program_name = sys.argv[0]
-if len(sys.argv) > 3 or len(sys.argv) < 2:
+
+DEBUGGING = True
+if DEBUGGING:
+    arg_list = ['product1.py', '1', 'attach.txt']
+else:
+    arg_list = sys.argv
+
+
+
+
+program_name = arg_list[0]
+if len(arg_list) > 3 or len(arg_list) < 2:
     sys.exit(program_name + ": Expecting two arguments: <column index> [filename]")
 
-col_index = int(sys.argv[1])
+col_index = int(arg_list[1])
 
-if len(sys.argv) == 3:
-    filename = sys.argv[2]
+if len(arg_list) == 3:
+    filename = arg_list[2]
     input_stream = open(filename, 'rU')
 else:
     input_stream = sys.stdin

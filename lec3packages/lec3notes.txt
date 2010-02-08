@@ -1,3 +1,15 @@
+Below in the installation tools section are instructions for how one would
+normally install a python package and create a new package.
+
+In this course we can use the template that I posted called firstpy as a basis
+for new packages.
+
+
+
+
+
+
+
 ################################################################################
 1. Installation tools:
 ################################################################################
