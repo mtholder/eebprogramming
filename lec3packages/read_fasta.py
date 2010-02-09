@@ -45,15 +45,20 @@ class GenBankSequence(object):
         self.sequence = ''.join(b)
 
 
-if __name__ == '__main__':
-    if len(sys.argv) != 2:
-        sys.exit(sys.argv[0] + ": Expecting one command line argument -- a filename")
-    inp = open(sys.argv[1], 'rU')
+def parse_gen_bank_fasta(input_stream):
+    """Takes a file-like object that contains GenBank records in FASTA.  Returns a
+    lists of GenBankSequence objects.
+    """
+
+    first_part = r'gi\|(\d+)\|gb\|([a-zA-Z0-9.]+)'
+    second_part = r'\|\s*(\S+\s+\S+)\s+(\S.*\S)'
+    third_part = r',\s*(\S.*\S)\s*'
+    pattern = first_part + second_part + third_part
+    identifier_pattern = re.compile(pattern)
 
     identifiers = []
     sequences = []
     current_seq = []
-
     for line in inp:
         stripped = line.strip()
         if line.startswith('>'):
@@ -69,11 +74,6 @@ if __name__ == '__main__':
 
     assert(len(identifiers) == len(sequences))
 
-    first_part = r'gi\|(\d+)\|gb\|([a-zA-Z0-9.]+)'
-    second_part = r'\|\s*(\S+\s+\S+)\s+(\S.*\S)'
-    third_part = r',\s*(\S.*\S)\s*'
-    pattern = first_part + second_part + third_part
-    identifier_pattern = re.compile(pattern)
 
     gi_numbers = []
     accession_numbers = []
@@ -92,14 +92,22 @@ if __name__ == '__main__':
             print element, "does not match our search pattern"
 
 
-    seq_objects = []
+    gbseq_objects = []
     for index, element in enumerate(gi_numbers):
         o = GenBankSequence(gi=element,
                             accession=accession_numbers[index],
                             species=species_list[index],
                             locus=locus_list[index],
                             sequence=sequences[index])
-        seq_objects.append(o)
+        gbseq_objects.append(o)
+    return gbseq_objects
+
+if __name__ == '__main__':
+    if len(sys.argv) != 2:
+        sys.exit(sys.argv[0] + ": Expecting one command line argument -- a filename")
+    inp = open(sys.argv[1], 'rU')
+    seq_objects = parse_gen_bank_fasta(inp)
+    for o in seq_objects:
         print
         print str(o)
         o.reverse_and_complement()
