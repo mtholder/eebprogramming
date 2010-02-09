@@ -26,21 +26,24 @@ if current_seq:
 
 assert(len(identifiers) == len(sequences))
 
+import re
+identifier_pattern = re.compile(r'gi\|(\d+)')
 
 gi_numbers = []
 accession_numbers = []
 descriptions = []
 for element in identifiers:
-    broken_up = element.split("|")
-    gi_numbers.append(broken_up[1])
-    accession_numbers.append(broken_up[3])
-    descriptions.append(broken_up[4].strip())
+    match_object = identifier_pattern.match(element)
+    if match_object:
+        print match_object.group(1)
+    else:
+        print element, "does not match our search pattern"
 
 
-for index, element in enumerate(gi_numbers):
-    print "gi =", element
-    print "accession =", accession_numbers[index]
-    print "description =", descriptions[index]
-    print sequences[index]
+#for index, element in enumerate(gi_numbers):
+#    print "gi =", element
+#    print "accession =", accession_numbers[index]
+#    print "description =", descriptions[index]
+#    print sequences[index]
 
 
