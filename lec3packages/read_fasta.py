@@ -3,6 +3,8 @@
 
 
 import sys
+import re
+
 if len(sys.argv) != 2:
     sys.exit(sys.argv[0] + ": Expecting one command line argument -- a filename")
 inp = open(sys.argv[1], 'rU')
@@ -26,7 +28,6 @@ if current_seq:
 
 assert(len(identifiers) == len(sequences))
 
-import re
 first_part = r'gi\|(\d+)\|gb\|([a-zA-Z0-9.]+)'
 second_part = r'\|\s*(\S+\s+\S+)\s+(\S.*\S)'
 third_part = r',\s*(\S.*\S)\s*'
