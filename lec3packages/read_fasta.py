@@ -27,7 +27,9 @@ if current_seq:
 assert(len(identifiers) == len(sequences))
 
 import re
-pattern = r'gi\|(\d+)\|gb\|([a-zA-Z0-9.]+)\|\s*(\S.*\S)\s*'
+first_part = r'gi\|(\d+)\|gb\|([a-zA-Z0-9.]+)'
+second_part = r'\|\s*(\S.*\S)\s*'
+pattern = first_part + second_part
 identifier_pattern = re.compile(pattern)
 
 gi_numbers = []
