@@ -14,7 +14,8 @@ current_seq = []
 for line in inp:
     stripped = line.strip()
     if line.startswith('>'):
-        sequences.append(''.join(current_seq))
+        if current_seq:
+            sequences.append(''.join(current_seq))
         identifiers.append(stripped[1:])
         current_seq = []
     else:
