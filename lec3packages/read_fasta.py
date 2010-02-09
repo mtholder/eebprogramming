@@ -14,12 +14,12 @@ current_seq = []
 for line in inp:
     stripped = line.strip()
     if line.startswith('>'):
-        sequences.append(current_seq)
+        sequences.append(''.join(current_seq))
         identifiers.append(stripped[1:])
         current_seq = []
     else:
         if stripped:
             current_seq.append(stripped)
 print '\n'.join(identifiers)
-print '\n'.join(repr(sequences))
+print '\n'.join(sequences)
 
