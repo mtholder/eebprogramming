@@ -45,61 +45,50 @@ class GenBankSequence(object):
         self.sequence = ''.join(b)
 
 
-def parse_gen_bank_fasta(input_stream):
-    """Takes a file-like object that contains GenBank records in FASTA.  Returns a
-    lists of GenBankSequence objects.
+def create_GBSeq_from_GenBankFasta(header, sequence):
+    """Takes the GenBank Fasta header line, and the sequence and creates a new
+    GenBankSequence object from that information.
     """
-
     first_part = r'gi\|(\d+)\|gb\|([a-zA-Z0-9.]+)'
     second_part = r'\|\s*(\S+\s+\S+)\s+(\S.*\S)'
     third_part = r',\s*(\S.*\S)\s*'
     pattern = first_part + second_part + third_part
     identifier_pattern = re.compile(pattern)
 
-    identifiers = []
-    sequences = []
+    match_object = identifier_pattern.match(header)
+    if match_object:
+        gi, acc, sp, locus, blah =  match_object.groups()
+        return GenBankSequence(gi=gi,
+                               accession=acc,
+                               species=sp,
+                               locus=locus,
+                               sequence=sequence)
+    else:
+        print header, "does not match our search pattern"
+
+def parse_gen_bank_fasta(input_stream):
+    """Takes a file-like object that contains GenBank records in FASTA.  Returns a
+    lists of GenBankSequence objects.
+    """
+    gbseq_objects = []
     current_seq = []
+    identifier = None
     for line in inp:
         stripped = line.strip()
         if line.startswith('>'):
             if current_seq:
-                sequences.append(''.join(current_seq))
-            identifiers.append(stripped[1:])
+                full_seq = ''.join(current_seq)
+                gbseq_o = create_GBSeq_from_GenBankFasta(identifier, full_seq)
+                gbseq_objects.append(gbseq_o)
+            identifier = stripped[1:]
             current_seq = []
         else:
             if stripped:
                 current_seq.append(stripped)
     if current_seq:
-        sequences.append(''.join(current_seq))
+        gbseq_o = create_GBSeq_from_GenBankFasta(identifier, full_seq)
+        gbseq_objects.append(gbseq_o)
 
-    assert(len(identifiers) == len(sequences))
-
-
-    gi_numbers = []
-    accession_numbers = []
-    locus_list = []
-    species_list = []
-    for element in identifiers:
-        match_object = identifier_pattern.match(element)
-        if match_object:
-            gi, acc, sp, locus, blah =  match_object.groups()
-            print [gi, acc, sp, locus, blah]
-            gi_numbers.append(gi)
-            accession_numbers.append(acc)
-            species_list.append(sp)
-            locus_list.append(locus)
-        else:
-            print element, "does not match our search pattern"
-
-
-    gbseq_objects = []
-    for index, element in enumerate(gi_numbers):
-        o = GenBankSequence(gi=element,
-                            accession=accession_numbers[index],
-                            species=species_list[index],
-                            locus=locus_list[index],
-                            sequence=sequences[index])
-        gbseq_objects.append(o)
     return gbseq_objects
 
 if __name__ == '__main__':
