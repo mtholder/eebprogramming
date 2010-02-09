@@ -28,7 +28,7 @@ assert(len(identifiers) == len(sequences))
 
 import re
 first_part = r'gi\|(\d+)\|gb\|([a-zA-Z0-9.]+)'
-second_part = r'\|\s*(\S.*\S)'
+second_part = r'\|\s*(\S+\s+\S+)\s+(\S.*\S)'
 third_part = r',\s*(\S.*\S)\s*'
 pattern = first_part + second_part + third_part
 identifier_pattern = re.compile(pattern)
