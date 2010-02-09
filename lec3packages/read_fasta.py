@@ -35,14 +35,17 @@ identifier_pattern = re.compile(pattern)
 
 gi_numbers = []
 accession_numbers = []
-descriptions = []
+locus_list = []
+species_list = []
 for element in identifiers:
     match_object = identifier_pattern.match(element)
     if match_object:
-        print "gi =", match_object.group(1)
-        print "accession =", match_object.group(2)
-        print "descrip =", match_object.group(3)
-        print "partial blah-blah =", match_object.group(4)
+        gi, acc, sp, locus, blah =  match_object.groups()
+        print [gi, acc, sp, locus, blah]
+        gi_numbers.append(gi)
+        accession_numbers.append(acc)
+        species_list.append(sp)
+        locus_list.append(locus)
     else:
         print element, "does not match our search pattern"
 
