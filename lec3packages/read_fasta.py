@@ -26,11 +26,21 @@ if current_seq:
 
 assert(len(identifiers) == len(sequences))
 
-print '\n'.join(identifiers)
-print '\n'.join(sequences)
 
-for index, element in enumerate(identifiers):
-    print element
+gi_numbers = []
+accession_numbers = []
+descriptions = []
+for element in identifiers:
+    broken_up = element.split("|")
+    gi_numbers.append(broken_up[1])
+    accession_numbers.append(broken_up[3])
+    descriptions.append(broken_up[4].strip())
+
+
+for index, element in enumerate(gi_numbers):
+    print "gi =", element
+    print "accession =", accession_numbers[index]
+    print "description =", descriptions[index]
     print sequences[index]
 
 
