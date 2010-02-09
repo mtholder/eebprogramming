@@ -60,7 +60,14 @@ class GenBankSequence(object):
         self.species = species
         self.locus = locus
         self.sequence = sequence
-
+    def __str__(self):
+        summary_lines = ["Sequence from GenBank",
+                         "Species: " + self.species,
+                         "Locus: " + self.locus,
+                         "(GI = " + self.gi + ", " +
+                         "Accession = " + self.accession + ")",
+                         self.sequence]
+        return '\n'.join(summary_lines)
 seq_objects = []
 for index, element in enumerate(gi_numbers):
     o = GenBankSequence(gi=element,
@@ -69,6 +76,6 @@ for index, element in enumerate(gi_numbers):
                         locus=locus_list[index],
                         sequence=sequences[index])
     seq_objects.append(o)
-    print o
+    print str(o)
 
 
