@@ -9,14 +9,17 @@ inp = open(sys.argv[1], 'rU')
 
 identifiers = []
 sequences = []
+current_seq = []
 
 for line in inp:
     stripped = line.strip()
     if line.startswith('>'):
+        sequences.append(current_seq)
         identifiers.append(stripped[1:])
+        current_seq = []
     else:
         if stripped:
-            sequences.append(stripped)
+            current_seq.append(stripped)
 print '\n'.join(identifiers)
 print '\n'.join(sequences)
 
