@@ -27,7 +27,8 @@ if current_seq:
 assert(len(identifiers) == len(sequences))
 
 import re
-identifier_pattern = re.compile(r'gi\|(\d+)')
+pattern = r'gi\|(\d+)|gb|([a-zA-Z0-9.]+)'
+identifier_pattern = re.compile(pattern)
 
 gi_numbers = []
 accession_numbers = []
@@ -36,6 +37,7 @@ for element in identifiers:
     match_object = identifier_pattern.match(element)
     if match_object:
         print match_object.group(1)
+        print match_object.group(2)
     else:
         print element, "does not match our search pattern"
 
