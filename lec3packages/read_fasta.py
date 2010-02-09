@@ -24,3 +24,8 @@ for line in inp:
 print '\n'.join(identifiers)
 print '\n'.join(sequences)
 
+for index, element in enumerate(identifiers):
+    print element
+    print sequences[index]
+
+
