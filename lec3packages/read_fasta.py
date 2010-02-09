@@ -11,10 +11,12 @@ identifiers = []
 sequences = []
 
 for line in inp:
+    stripped = line.strip()
     if line.startswith('>'):
-        identifiers.append(line.strip()[1:])
+        identifiers.append(stripped[1:])
     else:
-        sequences.append(line.strip())
+        if stripped:
+            sequences.append(stripped)
 print '\n'.join(identifiers)
 print '\n'.join(sequences)
 
