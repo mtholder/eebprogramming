@@ -21,5 +21,5 @@ for line in inp:
         if stripped:
             current_seq.append(stripped)
 print '\n'.join(identifiers)
-print '\n'.join(sequences)
+print '\n'.join(repr(sequences))
 
