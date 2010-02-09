@@ -21,6 +21,11 @@ for line in inp:
     else:
         if stripped:
             current_seq.append(stripped)
+if current_seq:
+    sequences.append(''.join(current_seq))
+
+assert(len(identifiers) == len(sequences))
+
 print '\n'.join(identifiers)
 print '\n'.join(sequences)
 
