@@ -80,8 +80,8 @@ class GenBankSequence(object):
         """Reverse and compelment the sequences (make it refer to the opposite
         strand).
         """
-        self.reversed = True
-        self.complemented = True
+        self.reversed = not self.reversed
+        self.complemented = not self.complemented
         a = list(self.sequence)
         a.reverse()
         rc_dict = {'A' : 'T', 'G' : 'C', 'C' : 'G', 'T' : 'A'}
