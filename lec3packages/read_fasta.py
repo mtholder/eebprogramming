@@ -60,15 +60,28 @@ class GenBankSequence(object):
         self.species = species
         self.locus = locus
         self.sequence = sequence
+        self.reversed = False
+        self.complemented = False
     def __str__(self):
+        details = "(GI = " + self.gi + ", " + "Accession = " + self.accession
+        if self.reversed:
+            details = details + " Reversed"
+        if self.complemented:
+            details = details + " Complemented"
+        details = details + ")"
         summary_lines = ["Sequence from GenBank",
                          "Species: " + self.species,
                          "Locus: " + self.locus,
-                         "(GI = " + self.gi + ", " +
-                         "Accession = " + self.accession + ")",
+                         details,
                          self.sequence]
         return '\n'.join(summary_lines)
+
     def reverse_and_complement(self):
+        """Reverse and compelment the sequences (make it refer to the opposite
+        strand).
+        """
+        self.reversed = True
+        self.complemented = True
         a = list(self.sequence)
         a.reverse()
         rc_dict = {'A' : 'T', 'G' : 'C', 'C' : 'G', 'T' : 'A'}
