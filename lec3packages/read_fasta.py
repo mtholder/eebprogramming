@@ -100,6 +100,10 @@ for index, element in enumerate(gi_numbers):
     print
     print str(o)
     o.reverse_and_complement()
+    print
+    print o
+    o.reverse_and_complement()
+    print
     print o
 
 
