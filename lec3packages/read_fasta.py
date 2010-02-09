@@ -51,11 +51,24 @@ for element in identifiers:
         print element, "does not match our search pattern"
 
 
+class GenBankSequence(object):
+    "Encapsulates the information that is contained in a genbank record."
+
+    def __init__(self, gi, accession, species, locus, sequence):
+        self.gi = gi
+        self.accession = accession
+        self.species = species
+        self.locus = locus
+        self.sequence = sequence
+
+seq_objects = []
 for index, element in enumerate(gi_numbers):
-    print "gi =", element
-    print "accession =", accession_numbers[index]
-    print "species =", species_list[index]
-    print "locus =", locus_list[index]
-    print sequences[index]
+    o = GenBankSequence(gi=element,
+                        accession=accession_numbers[index],
+                        species=species_list[index],
+                        locus=locus_list[index],
+                        sequence=sequences[index])
+    seq_objects.append(o)
+    print o
 
 
