@@ -51,10 +51,11 @@ for element in identifiers:
         print element, "does not match our search pattern"
 
 
-#for index, element in enumerate(gi_numbers):
-#    print "gi =", element
-#    print "accession =", accession_numbers[index]
-#    print "description =", descriptions[index]
-#    print sequences[index]
+for index, element in enumerate(gi_numbers):
+    print "gi =", element
+    print "accession =", accession_numbers[index]
+    print "species =", species_list[index]
+    print "locus =", locus_list[index]
+    print sequences[index]
 
 
