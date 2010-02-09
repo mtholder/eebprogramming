@@ -68,6 +68,14 @@ class GenBankSequence(object):
                          "Accession = " + self.accession + ")",
                          self.sequence]
         return '\n'.join(summary_lines)
+    def reverse_and_complement(self):
+        a = list(self.sequence)
+        a.reverse()
+        rc_dict = {'A' : 'T', 'G' : 'C', 'C' : 'G', 'T' : 'A'}
+        b = []
+        for i in a:
+            b.append(rc_dict[i])
+        self.sequence = ''.join(b)
 seq_objects = []
 for index, element in enumerate(gi_numbers):
     o = GenBankSequence(gi=element,
@@ -76,6 +84,9 @@ for index, element in enumerate(gi_numbers):
                         locus=locus_list[index],
                         sequence=sequences[index])
     seq_objects.append(o)
+    print
     print str(o)
+    o.reverse_and_complement()
+    print o
 
 
