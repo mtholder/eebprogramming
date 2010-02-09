@@ -13,6 +13,8 @@ sequences = []
 for line in inp:
     if line.startswith('>'):
         identifiers.append(line.strip()[1:])
-
+    else:
+        sequences.append(line.strip())
 print '\n'.join(identifiers)
+print '\n'.join(sequences)
 
