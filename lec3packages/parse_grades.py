@@ -22,7 +22,7 @@ def parse_file(inp):
             assert sid not in sn
             gr_strings = aw[3:]
             if len(gr_strings) != len(lgi):
-                print "Skipping student",  sid, "because they don't have enough grades"
+                sys.stderr.write("Skipping student " + sid +" because they don't have enough grades\n")
             else:
                 gf = []
                 for i in gr_strings:
@@ -48,20 +48,21 @@ blob = parse_file(file_obj)
 grade_items, student_grades, student_names = blob
 
 
-print "grade_items =", grade_items
-print "student_grades =", student_grades
-print "student_names =", student_names
+#print "grade_items =", grade_items
+#print "student_grades =", student_grades
+#print "student_names =", student_names
 
 mean_for_item = sys.argv[2]
-print mean_for_item
 
 
 if mean_for_item in grade_items:
+    sys.stderr.write("Calculating mean for the grade item" + str(mean_for_item) + "\n")
     ind = grade_items.index(mean_for_item)
     print calc_mean_for_grade_item(student_grades, ind)
 elif mean_for_item in student_grades:
+    sys.stderr.write("Calculating mean for student " + str(mean_for_item) + "\n")
     grades = student_grades[mean_for_item]
     mean = sum(grades)/len(grades)
     print mean
 else:
-    sys.exit("I don't know what " + mean_for_item + " is")
+    sys.exit("I don't know what " + mean_for_item + " is!")
