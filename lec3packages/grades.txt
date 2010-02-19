@@ -1,0 +1,6 @@
+Last	First	ID	Exam1	Exam2
+Bogus	John	514514	95.1	73.0
+Fake	Nancy	462462	83.0	78.1
+Smith	Frank	514512	70.0
+Smith	Nancy	523412	98.6	92.0
+Zzyzzus	Thomas	568357	84.2	73.0
