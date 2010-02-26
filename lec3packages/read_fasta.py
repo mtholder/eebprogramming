@@ -116,5 +116,9 @@ if __name__ == '__main__':
         o.reverse_and_complement()
         print
         print o
+    test_d = DNASequence("ACGT")
+    print test_d
+    test_d.reverse_and_complement()
+    print test_d
 
 
