@@ -5,28 +5,17 @@
 import sys
 import re
 
-class GenBankSequence(object):
-    "Encapsulates the information that is contained in a genbank record."
-
-    def __init__(self, gi, accession, species, locus, sequence):
-        self.gi = gi
-        self.accession = accession
+class DNASequence(object):
+    def __init__(self, sequence, species="<unknown>", locus="<unknown>"):
         self.species = species
         self.locus = locus
         self.sequence = sequence
         self.reversed = False
         self.complemented = False
+
     def __str__(self):
-        details = "(GI = " + self.gi + ", " + "Accession = " + self.accession
-        if self.reversed:
-            details = details + " Reversed"
-        if self.complemented:
-            details = details + " Complemented"
-        details = details + ")"
-        summary_lines = ["Sequence from GenBank",
-                         "Species: " + self.species,
+        summary_lines = ["Species: " + self.species,
                          "Locus: " + self.locus,
-                         details,
                          self.sequence]
         return '\n'.join(summary_lines)
 
@@ -43,6 +32,29 @@ class GenBankSequence(object):
         for i in a:
             b.append(rc_dict[i])
         self.sequence = ''.join(b)
+
+class GenBankSequence(DNASequence):
+    "Encapsulates the information that is contained in a genbank record."
+
+    def __init__(self, gi, accession, species, locus, sequence):
+        DNASequence.__init__(self, sequence, species, locus)
+        self.gi = gi
+        self.accession = accession
+
+    def __str__(self):
+        details = "(GI = " + self.gi + ", " + "Accession = " + self.accession
+        if self.reversed:
+            details = details + " Reversed"
+        if self.complemented:
+            details = details + " Complemented"
+        details = details + ")"
+        summary_lines = ["Sequence from GenBank",
+                         "Species: " + self.species,
+                         "Locus: " + self.locus,
+                         details,
+                         self.sequence]
+        return '\n'.join(summary_lines)
+
 
 
 def create_GBSeq_from_GenBankFasta(header, sequence):
