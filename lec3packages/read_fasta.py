@@ -14,7 +14,18 @@ class DNASequence(object):
         self.complemented = False
 
     def get_header_str(self):
-        return "Species: " + self.species + "\nLocus: " + self.locus
+        summary_lines = ["Species: " + self.species,
+                         "Locus: " + self.locus,]
+        if self.reversed or self.complemented:
+            details = "("
+            if self.reversed:
+                details = details + "Reversed"
+            if self.complemented:
+                details = details + " Complemented"
+            details = details + ")"
+            summary_lines.append(details)
+
+        return '\n'.join(summary_lines)
 
     def __str__(self):
         return '\n'.join([self.get_header_str(), self.sequence])
@@ -42,16 +53,9 @@ class GenBankSequence(DNASequence):
         self.accession = accession
 
     def get_header_str(self):
-        details = "(GI = " + self.gi + ", " + "Accession = " + self.accession
-        if self.reversed:
-            details = details + " Reversed"
-        if self.complemented:
-            details = details + " Complemented"
-        details = details + ")"
-        summary_lines = ["Sequence from GenBank",
-                         "Species: " + self.species,
-                         "Locus: " + self.locus,
-                         details]
+        h = DNASequence.get_header_str(self)
+        details = "GenBankSequence GI = " + self.gi + ", " + "Accession = " + self.accession
+        summary_lines = [details, h]
         return '\n'.join(summary_lines)
 
 
@@ -116,7 +120,8 @@ if __name__ == '__main__':
         o.reverse_and_complement()
         print
         print o
-    test_d = DNASequence("ACGT")
+    test_d = DNASequence("ACGTG")
+
     print test_d
     test_d.reverse_and_complement()
     print test_d
