@@ -79,7 +79,7 @@ def create_GBSeq_from_GenBankFasta(header, sequence):
                                locus=locus,
                                sequence=sequence)
     else:
-        raise Exception(header + " does not appear to be a GenBank Fasta header")
+        raise Exception('"' + header + '" does not appear to be a GenBank Fasta header')
 
 def parse_gen_bank_fasta(input_stream):
     """Takes a file-like object that contains GenBank records in FASTA.  Returns a
