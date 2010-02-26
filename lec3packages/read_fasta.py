@@ -109,8 +109,12 @@ def parse_gen_bank_fasta(input_stream):
 if __name__ == '__main__':
     if len(sys.argv) != 2:
         sys.exit(sys.argv[0] + ": Expecting one command line argument -- a filename")
-    inp = open(sys.argv[1], 'rU')
-    seq_objects = parse_gen_bank_fasta(inp)
+    fn = sys.argv[1]
+    inp = open(fn, 'rU')
+    try:
+        seq_objects = parse_gen_bank_fasta(inp)
+    except Exception as x:
+        sys.exit('Error parsing "' + fn + '":\n' + str(x))
     for o in seq_objects:
         print
         print str(o)
