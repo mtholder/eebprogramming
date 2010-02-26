@@ -17,9 +17,7 @@ class DNASequence(object):
         return "Species: " + self.species + "\nLocus: " + self.locus
 
     def __str__(self):
-        summary_lines = [self.get_header_str()
-                         self.sequence]
-        return '\n'.join(summary_lines)
+        return '\n'.join([self.get_header_str(), self.sequence])
 
     def reverse_and_complement(self):
         """Reverse and compelment the sequences (make it refer to the opposite
@@ -49,7 +47,7 @@ class GenBankSequence(DNASequence):
             details = details + " Reversed"
         if self.complemented:
             details = details + " Complemented"
-        details + ")"
+        details = details + ")"
         summary_lines = ["Sequence from GenBank",
                          "Species: " + self.species,
                          "Locus: " + self.locus,
