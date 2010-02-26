@@ -13,9 +13,11 @@ class DNASequence(object):
         self.reversed = False
         self.complemented = False
 
+    def get_header_str(self):
+        return "Species: " + self.species + "\nLocus: " + self.locus
+
     def __str__(self):
-        summary_lines = ["Species: " + self.species,
-                         "Locus: " + self.locus,
+        summary_lines = [self.get_header_str()
                          self.sequence]
         return '\n'.join(summary_lines)
 
@@ -41,18 +43,17 @@ class GenBankSequence(DNASequence):
         self.gi = gi
         self.accession = accession
 
-    def __str__(self):
+    def get_header_str(self):
         details = "(GI = " + self.gi + ", " + "Accession = " + self.accession
         if self.reversed:
             details = details + " Reversed"
         if self.complemented:
             details = details + " Complemented"
-        details = details + ")"
+        details + ")"
         summary_lines = ["Sequence from GenBank",
                          "Species: " + self.species,
                          "Locus: " + self.locus,
-                         details,
-                         self.sequence]
+                         details]
         return '\n'.join(summary_lines)
 
 
