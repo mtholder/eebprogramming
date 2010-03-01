@@ -1,0 +1,512 @@
+1. Convenience of classes for organizing data.
+
+In the FASTA parsing example we saw that it is more convenient to store
+related data together.  Rather than having data in several different data
+structures, like this:
+###############
+# Code block 1:
+###############
+gi_numbers = ['451', '463416', '134613', ]
+accession_numbers = ['AF56146', 'QN612461', 'AE46146', ]
+taxa = ['Bufo marinus', 'Bufo debilis', 'Bufo bufo', ]
+loci = ['actin', 'actin-like molecule', 'could-be actin', ]
+sequence = ['ACGTTATAGCCTACCCATTATTTGGAGAGTATGATGTCACTCTCCATATCACTGA', 'AGAGTATGAACTGATGTCACTCTACGTTATAGCCTACCCATTATTTGGCCATATC', 'CATTATGATTATNTAGTTATATATAGGAGTATCATACATACGATGTAGATACATGATGACGTACATGTGACGATGTGC', ]
+################################################################################
+
+we can move to a system in which we have a list of GenBankSequence objects:
+###############
+# Code block 2:
+###############
+sequences_objects = [
+	GenBankSequence(gi='451', accession='AF56146', taxon='Bufo marinus', locus='actin', sequence='ACGTTATAGCCTACCCATTATTTGGAGAGTATGATGTCACTCTCCATATCACTGA'),
+	GenBankSequence(gi='463416', accession='QN612461', taxon='Bufo debilis', locus='actin-like molecule', sequence='AGAGTATGAACTGATGTCACTCTACGTTATAGCCTACCCATTATTTGGCCATATC'),
+	GenBankSequence(gi='134613', accession='AE46146', taxon='Bufo bufo', locus='could-be actin', sequence='CATTATGATTATNTAGTTATATATAGGAGTATCATACATACGATGTAGATACATGATGACGTACATGTGACGATGTGC'),
+	]
+################################################################################
+
+From a purely organizational perspective, using GenBankSequence is nice.  When
+the code block 2 executes, we would have a single list of objects rather than
+5 separate lists (as we would in code block 1).
+
+If we have a reference to a GenBankSequence object, we will be able to access
+all of the relevant information about it (its GI, accession, taxon, locus, and
+the DNA sequence).  This is much easier than having to figure out what the
+object's index is and then looking up all of the relevant data in different lists.
+
+
+
+
+2. Syntax of classes.
+To get the code block 2 to execute, we have to define the name 'GenBankSequence'
+It looks like we are calling a function called 'GenBankSequence', but since
+we want to create an object, we actually are creating a class.  The syntax for
+defining a new class is.
+
+###############
+# Code block 3:
+###############
+class GenBankSequence(object):
+	"""A class of objects that stores sequence data along with metadata that is
+	associated with a GenBank record (such as the gi and accession number).
+	"""
+	def __init__(self, sequence, gi=None, accession=None, taxon=None, locus=None):
+		"""In addition to the `sequence`. The `gi`, `accession`, `taxon` and
+		`locus` arguments can be specified.
+		"""
+		self.sequence = sequence
+		self.gi = gi
+		self.accession = accession
+		self.taxon = taxon
+		self.locus = locus
+################################################################################
+
+The class definition in code block 3 is very simple.  It only has initialization
+method called __init__.  This type of class is actually not rare, we
+occassionally just use a class to bundle data to gether.
+
+After defining such a class, we can execute an instruction such as:
+
+###############
+# Code block 4:
+###############
+o = GenBankSequence(gi='451', accession='AF56146', taxon='Bufo marinus', locus='actin', sequence='ACGTTATAGCCTACCCATTATTTGGAGAGTATGATGTCACTCTCCATATCACTGA')
+################################################################################
+
+When python sees this it is broken down into several steps.
+	1. python sees that an assignment is taking place.  First it will work
+		on the right hand side of the assignment operator (the first = sign in the line)
+
+	2. What is "GenBankSequence" ? Python looks through its dictionary of local
+		names to see if it knows of something called "GenBankSequence". If we have
+		already executed code block 3, the python will find the parsed class
+		object that is create when python saw code block 3 (this class definition
+		is a lot like a function in that it mainly stores the code when it reads
+		a class definition.  It does not execute all of the class's methods.
+
+	3. Python sees the '(' after the name.  This indicates that some form of
+		function/method call is taking place.
+
+	4. It continues reading until the ')' character, and builds up a list of
+		arguments for the function.  In this case we are naming the arguments
+		in the function call.  Rather than just referring to a bunch of objects
+		in a defined order, we are listing names for the objects.  Python will
+		use the names that we are giving in this function call to pass the
+		objects into the function under the appropriate names.
+
+	5. Now that it knows the arguments, python asks itself "Is GenBankSequence
+		callable?"  Functions (defined with the "def" keyword)  are callable.
+		When a function is called, then the flow of execution switches to the
+		body of a function.  Classes are also callable. When a class is called
+		python interprets this as a statement that you want a new instance of
+		this type of object.
+
+	6. Python creates a new object, and writes down the objects type as
+		GenBankSequence (it does this by making a secret hidden attribute of The
+		object called the "__class__" attribute refer to the parsed
+		GenBankSequence definition).
+
+	7. Python checks to see if the class has an __init__ method.  In this case
+		it does. We declared __init__ as if it were a function, but the fact that
+		it was indented inside the GenBankSequence class definition means to
+		python that __init__ is not just a "bare" function.  Instead it is a
+		special method of the class.  A method is called in association with an
+		instance of the class.  The object that the method is called with is
+		passed in as the first argument of the method.
+
+	8. Because __init__ was found, the method is called and the arguments that
+		were specified in the call to GenBankSequence(...) get passed in *after*
+		the self object.
+
+In pseudo-code we can think of python seeing code block 4 as equivalent to:
+###############
+# PseudoCode block 5:
+###############
+_hidden = new_python_object()
+_hidden.__class__ = GenBankSequence
+GenBankSequence.__init__(_hidden, gi='451', accession='AF56146', taxon='Bufo marinus', locus='actin', sequence='ACGTTATAGCCTACCCATTATTTGGAGAGTATGATGTCACTCTCCATATCACTGA')
+return _hidden
+################################################################################
+
+
+After the execution, we have a new object in memory, but we also know that
+we have "called" the __init__ method with the arguments that we want.
+
+
+3.  Using classes
+
+In addition to bundling information together, classes also give us a chance to
+associate behaviors with data.  What we mean by this, is that we can write
+as many methods as we would like for a class.  We can then call these methods
+to do transformations or calculations based on the data.
+
+In class we discussed a "reverse_and_complement" method. Compare code blocks 6
+and 7
+
+####################################################
+# Code block 6 (object oriented style. uses classes):
+####################################################
+
+class DNASequence(object):
+    def __init__(self, sequence, species="<unknown>", locus="<unknown>"):
+        self.species = species
+        self.locus = locus
+        self.sequence = sequence
+        self.reversed = False
+        self.complemented = False
+    def reverse_and_complement(self):
+        """Reverse and compelment the sequences (make it refer to the opposite
+        strand).
+        """
+        self.reversed = not self.reversed
+        self.complemented = not self.complemented
+        a = list(self.sequence)
+        a.reverse()
+        rc_dict = {'A' : 'T', 'G' : 'C', 'C' : 'G', 'T' : 'A'}
+        b = []
+        for i in a:
+            b.append(rc_dict[i])
+        self.sequence = ''.join(b)
+
+class RNASequence(object):
+    def __init__(self, sequence, species="<unknown>", locus="<unknown>"):
+        self.species = species
+        self.locus = locus
+        self.sequence = sequence
+        self.reversed = False
+        self.complemented = False
+
+    def reverse_and_complement(self):
+        """Reverse and compelment the sequences (make it refer to the opposite
+        strand).
+        """
+        self.reversed = not self.reversed
+        self.complemented = not self.complemented
+        a = list(self.sequence)
+        a.reverse()
+        rc_dict = {'A' : 'U', 'G' : 'C', 'C' : 'G', 'U' : 'A'}
+        b = []
+        for i in a:
+            b.append(rc_dict[i])
+        self.sequence = ''.join(b)
+
+o = RNASequence("AGUCC")
+n = DNASequence("AGTCC")
+o.reverse_and_complement()
+n.reverse_and_complement()
+################################################################################
+
+
+#################################################################
+# Code block 7 (strictly procedural style. Does not use classes):
+#################################################################
+def reverse_and_complement(seq, seq_type):
+	"""Reverse and compelment the sequences (make it refer to the opposite
+	strand).
+	"""
+	a = list(seq)
+	a.reverse()
+	if seq_type.upper() == 'DNA':
+		rc_dict = {'A' : 'T', 'G' : 'C', 'C' : 'G', 'T' : 'A'}
+	else:
+		assert (seq_type.upper() == 'RNA'
+		rc_dict = {'A' : 'U', 'G' : 'C', 'C' : 'G', 'U' : 'A'}
+	b = []
+	for i in a:
+		b.append(rc_dict[i])
+	return ''.join(b)
+
+o = "AGUCC"
+o = reverse_and_complement(o, "RNA")
+
+n = "AGTCC"
+n = reverse_and_complement(n, "DNA")
+
+################################################################################
+
+Notice how it is easier to write the reverse_and_complement method in
+code block 6 than in code block 7.
+
+It is not a big deal in a simple function like this one, but in code block 6 each
+reverse_and_complement method definition only has to deal with one type of
+sequence. When writing the DNA function, we know that we only have to deal with
+DNA sequences.  More constraints on the inputs to a function means that there
+are fewer special cases to consider when implementing the logic of the method.
+
+
+It is also easier to call the code in 6, because the caller does not have to
+keep track of which type of data we are dealing with.  When the object is
+created we presumably know what type of sequence that we have.  Rather than having
+to remember while we are coding that o is an RNA sequence, the object oriented
+style stores that information in the object itself.
+
+This does not matter much in this tiny code, but it matters in big programs.
+
+
+
+
+
+4. Code reuse.
+
+You probably noticed that while I said that code block 6 was easier to write, it
+was actually longer.  Surely writing lots of code makes it easier to make
+mistakes. How can we avoid this.  We would probably write this logic using
+the approach shown in Code block 8.
+
+In that example we put the common code in a "base" class that underlies RNA,
+DNA, Protein sequences.
+
+The _do_reverse_and_complement method is a bit cumbersome to use -- the caller
+has to specify the correct dictionary as the second argument.  Because it
+may be error prone, we use the python convention of "hiding" it by starting the
+name with an underscore.  This conveys to "users" of the class, that you are
+not supposed to call that method externally.  Instead the users of the class
+would call reverse_and_complement().
+
+Notice that in this version of the code we are exploiting our knowledge of the
+type of data we are dealing with (reverse_and_complement in DNASequence "knows"
+the appropriate dictionary to use for complementing the sequence because that
+method can only be called with DNASequence objects as "self").
+We are also avoiding lots of copy-and-paste coding (which is error prone), by
+using a base class to do the common logical operations.
+
+Also note that if we have a "derived" class (such as ProteinSequence) for which
+the operation is not appropriate, the correct behavior is to raise an exception
+to indicate to the caller of the function that an illegal operation has been
+requested. In this case we used TypeError to indicate that the type
+
+
+
+
+############################################################
+# Code block 8 using inheritance to reuse common operations:
+############################################################
+
+class MolecularSequence(object):
+    def __init__(self, sequence, species="<unknown>", locus="<unknown>"):
+        self.species = species
+        self.locus = locus
+        self.sequence = sequence
+        self.reversed = False
+        self.complemented = False
+    def _do_reverse_and_complement(self, complement_dict):
+        """Reverse and compelment the sequences (make it refer to the opposite
+        strand).
+        """
+        self.reversed = not self.reversed
+        self.complemented = not self.complemented
+        a = list(self.sequence)
+        a.reverse()
+        b = []
+        for i in a:
+            b.append(complement_dict[i])
+        self.sequence = ''.join(b)
+
+class DNASequence(MolecularSequence):
+    def reverse_and_complement(self):
+        """Reverse and compelment the sequences (make it refer to the opposite
+        strand).
+        """
+        self._do_reverse_and_complement({'A' : 'T', 'G' : 'C', 'C' : 'G', 'T' : 'A'})
+
+class RNASequence(MolecularSequence):
+
+    def reverse_and_complement(self):
+        """Reverse and compelment the sequences (make it refer to the opposite
+        strand).
+        """
+        self._do_reverse_and_complement({'A' : 'U', 'G' : 'C', 'C' : 'G', 'U' : 'A'})
+
+class ProteinSequence(MolecularSequence):
+
+    def reverse_and_complement(self):
+        """Reverse and compelment the sequences (make it refer to the opposite
+        strand).
+        """
+        raise TypeError("You cannot reverse and complement an protein sequence")
+
+o = RNASequence("AGUCC")
+n = DNASequence("AGTCC")
+o.reverse_and_complement()
+n.reverse_and_complement()
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+###############
+# Code block :
+###############
+
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
+################################################################################
