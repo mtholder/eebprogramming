@@ -7,6 +7,10 @@ def debug(m):
     if VERBOSE_MODE:
         sys.stderr.write("%(script)s: %(msg)s\n" % {'script' : sys.argv[0], 'msg' : m})
 
+def select_random_index(probabilities):
+    "Returns an index in proportion to its probability"
+    return 0
+
 class Population(object):
     """An evolving population of organisms  -- really just a collection of alleles
     is enough for our purposes (hermaphroditic reproduction).
@@ -14,8 +18,14 @@ class Population(object):
     def __init__(self, allele_counts):
         self.n = sum(allele_counts)
         self.allele_counts = allele_counts
+
     def next_generation(self):
-        pass
+        allele_freq = self.get_allele_frequncies()
+        next_gen_counts = [0]*len(allele_freq)
+        for i in xrange(self.n):
+            index = select_random_index(allele_freq)
+            next_gen_counts[index] = next_gen_counts[index] + 1
+        self.allele_counts = next_gen_counts
 
     def get_allele_frequncies(self):
         allele_freq = []
