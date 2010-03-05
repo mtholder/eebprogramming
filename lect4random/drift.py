@@ -21,8 +21,12 @@ def select_random_index(probabilities):
     return n
 
 def write_nexus_distances(outp, dist_mat, labels):
-    outp.write(str(dist_mat))
-
+    outp.write("""#NEXUS
+Begin Taxa;
+    dimensions ntax = %(num_tax)d;
+    taxlabels %(taxlabels)s;
+End;
+""" % {'num_tax' : len(labels), 'taxlabels' : " ".join(labels)})
 def calc_freq_dist(one_p_list, other_p_list):
     "Returns the Euclidean distance between two vectors"
     diff = 0.0
