@@ -19,6 +19,11 @@ def select_random_index(probabilities):
             return n
     return n
 
+def write_nexus_distances(outp, dist_mat, labels):
+    outp.write(str(dist_mat))
+
+def calc_freq_dist(one_p_list, other_p_list):
+    return 1.0
 class Population(object):
     """An evolving population of organisms  -- really just a collection of alleles
     is enough for our purposes (hermaphroditic reproduction).
@@ -80,6 +85,11 @@ if __name__ == '__main__':
                       type='str',
                       default="50 50",
                       help="Initial counts of each allele (space separated)")
+    parser.add_option('-d', '--distance-file',
+                      dest='distances',
+                      type='str',
+                      default=None,
+                      help="Optional name of a file to store pairwise distances.")
     options, args = parser.parse_args(sys.argv)
     try:
         allele_counts = []
@@ -108,12 +118,13 @@ if __name__ == '__main__':
     # create the population that will be the parents of species a and b
     cdParPop = Population(allele_counts)
     for i in xrange(options.internal):
-        f_str = cStringIO.StringIO()
-        abParPop.write_frequencies(f_str)
-        f_str.write(' ')
-        cdParPop.write_frequencies(f_str)
-        to_print = {'gen' : i, 'freq_strings' : f_str.getvalue()}
-        debug("internal generation %(gen)d: %(freq_strings)s" % to_print)
+        if VERBOSE_MODE:
+            f_str = cStringIO.StringIO()
+            abParPop.write_frequencies(f_str)
+            f_str.write(' ')
+            cdParPop.write_frequencies(f_str)
+            to_print = {'gen' : i, 'freq_strings' : f_str.getvalue()}
+            debug("internal generation %(gen)d: %(freq_strings)s" % to_print)
         abParPop.next_generation()
         cdParPop.next_generation()
     aPopulation = Population(abParPop.allele_counts)
@@ -121,16 +132,17 @@ if __name__ == '__main__':
     cPopulation = Population(cdParPop.allele_counts)
     dPopulation = Population(cdParPop.allele_counts)
     for i in xrange(options.terminal):
-        f_str = cStringIO.StringIO()
-        aPopulation.write_frequencies(f_str)
-        f_str.write(' ')
-        bPopulation.write_frequencies(f_str)
-        f_str.write(' ')
-        cPopulation.write_frequencies(f_str)
-        f_str.write(' ')
-        dPopulation.write_frequencies(f_str)
-        to_print = {'gen' : i, 'freq_strings' : f_str.getvalue()}
-        debug("terminal generation %(gen)d: %(freq_strings)s" % to_print)
+        if VERBOSE_MODE:
+            f_str = cStringIO.StringIO()
+            aPopulation.write_frequencies(f_str)
+            f_str.write(' ')
+            bPopulation.write_frequencies(f_str)
+            f_str.write(' ')
+            cPopulation.write_frequencies(f_str)
+            f_str.write(' ')
+            dPopulation.write_frequencies(f_str)
+            to_print = {'gen' : i, 'freq_strings' : f_str.getvalue()}
+            debug("terminal generation %(gen)d: %(freq_strings)s" % to_print)
         aPopulation.next_generation()
         bPopulation.next_generation()
         cPopulation.next_generation()
@@ -147,3 +159,21 @@ if __name__ == '__main__':
     dPopulation.write_frequencies(output_stream)
     output_stream.write("\n")
 
+    if options.distances:
+        outp = open(options.distances, 'w')
+        try:
+            allele_freq_list = []
+            for pop in [aPopulation, bPopulation, cPopulation, dPopulation]:
+                allele_freq_list.append(pop.get_allele_frequncies())
+            dist_mat = []
+            for row_el in allele_freq_list:
+                dist_row = []
+                for col_el in allele_freq_list:
+                    if row_el is col_el:
+                        dist_row.append(0.0)
+                    else:
+                        dist_row.append(calc_freq_dist(row_el, col_el))
+                dist_mat.append(dist_row)
+            write_nexus_distances(outp, dist_mat, labels=["A", "B", "C", "D"])
+        finally:
+            outp.close()
