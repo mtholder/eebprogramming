@@ -16,8 +16,24 @@ class Population(object):
         self.allele_counts = allele_counts
     def next_generation(self):
         pass
+
+    def get_allele_frequncies(self):
+        allele_freq = []
+        for c in self.allele_counts:
+            freq = float(c)/self.n
+            allele_freq.append(freq)
+        return allele_freq
+
     def write_frequencies(self, outp):
-        pass
+        allele_freq = self.get_allele_frequncies()
+        as_str = []
+        for c in allele_freq:
+            s = "%(freq)3.4f" % {'freq' : c}
+            as_str.append(s)
+        as_str.append("\n")
+        msg = " ".join(as_str)
+        outp.write(msg)
+
 
 if __name__ == '__main__':
     from optparse import OptionParser
@@ -44,7 +60,9 @@ if __name__ == '__main__':
                       help="Initial counts of each allele (space separated)")
     options, args = parser.parse_args(sys.argv)
     try:
-        allele_counts = [int(i) for i in options.counts.split()]
+        allele_counts = []
+        for i in options.counts.split()
+            allele_counts.append(int(i))
     except:
         sys.exit("Expecting the --counts (-c) option to be space-separated list of integers got %(val)s" % {'val':options.counts})
     if options.terminal < 0:
