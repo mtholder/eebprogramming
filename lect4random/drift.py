@@ -2,6 +2,7 @@
 import sys
 import random
 import cStringIO
+import math
 
 VERBOSE_MODE = False
 RNG = random.Random()
@@ -23,7 +24,12 @@ def write_nexus_distances(outp, dist_mat, labels):
     outp.write(str(dist_mat))
 
 def calc_freq_dist(one_p_list, other_p_list):
-    return 1.0
+    "Returns the Euclidean distance between two vectors"
+    diff = 0.0
+    for n, one_prob in enumerate(one_p_list):
+        other_prob = other_p_list[n]
+        diff = diff + pow(other_prob - one_prob, 2)
+    return math.sqrt(diff)
 class Population(object):
     """An evolving population of organisms  -- really just a collection of alleles
     is enough for our purposes (hermaphroditic reproduction).
