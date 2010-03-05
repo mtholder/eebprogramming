@@ -1,7 +1,9 @@
 #!/usr/bin/env python
 import sys
+import random
 
 VERBOSE_MODE = False
+RNG = random.Random()
 def debug(m):
     "We should probably use the logging module for this"
     if VERBOSE_MODE:
@@ -52,6 +54,11 @@ if __name__ == '__main__':
                       action="store_true",
                       default=False,
                       help="Verbose execution mode")
+    parser.add_option('-s', '--seed',
+                      dest='seed',
+                      type='int',
+                      default=0,
+                      help="Random number generator seed")
     parser.add_option('-i', '--internal-branch',
                       dest='internal',
                       type='int',
@@ -80,6 +87,16 @@ if __name__ == '__main__':
         sys.exit("The number of generations for the terminal branches must be non-negative")
     if options.verbose:
         VERBOSE_MODE = True
+
+    # seed the random number generator, and print out the seed to stderr
+    if options.seed < 2:
+        import time
+        seed = int(time.time()*1000)
+    else:
+        seed = options.seed
+    sys.stderr.write("seed = %(seed)d\n" % {'seed' : seed})
+    RNG.seed(seed)
+
     # create the population that will be the parents of species a and b
     abParPop = Population(allele_counts)
     # create the population that will be the parents of species a and b
