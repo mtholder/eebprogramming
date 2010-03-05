@@ -30,7 +30,6 @@ class Population(object):
         for c in allele_freq:
             s = "%(freq)3.4f" % {'freq' : c}
             as_str.append(s)
-        as_str.append("\n")
         msg = " ".join(as_str)
         outp.write(msg)
 
@@ -61,7 +60,7 @@ if __name__ == '__main__':
     options, args = parser.parse_args(sys.argv)
     try:
         allele_counts = []
-        for i in options.counts.split()
+        for i in options.counts.split():
             allele_counts.append(int(i))
     except:
         sys.exit("Expecting the --counts (-c) option to be space-separated list of integers got %(val)s" % {'val':options.counts})
