@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 import sys
 import random
+import cStringIO
 
 VERBOSE_MODE = False
 RNG = random.Random()
@@ -107,7 +108,12 @@ if __name__ == '__main__':
     # create the population that will be the parents of species a and b
     cdParPop = Population(allele_counts)
     for i in xrange(options.internal):
-        debug("internal generation %(gen)d" % {'gen' : i })
+        f_str = cStringIO.StringIO()
+        abParPop.write_frequencies(f_str)
+        f_str.write(' ')
+        cdParPop.write_frequencies(f_str)
+        to_print = {'gen' : i, 'freq_strings' : f_str.getvalue()}
+        debug("internal generation %(gen)d: %(freq_strings)s" % to_print)
         abParPop.next_generation()
         cdParPop.next_generation()
     aPopulation = Population(abParPop.allele_counts)
@@ -115,7 +121,16 @@ if __name__ == '__main__':
     cPopulation = Population(cdParPop.allele_counts)
     dPopulation = Population(cdParPop.allele_counts)
     for i in xrange(options.terminal):
-        debug("terminal generation %(gen)d" % {'gen' : i })
+        f_str = cStringIO.StringIO()
+        aPopulation.write_frequencies(f_str)
+        f_str.write(' ')
+        bPopulation.write_frequencies(f_str)
+        f_str.write(' ')
+        cPopulation.write_frequencies(f_str)
+        f_str.write(' ')
+        dPopulation.write_frequencies(f_str)
+        to_print = {'gen' : i, 'freq_strings' : f_str.getvalue()}
+        debug("terminal generation %(gen)d: %(freq_strings)s" % to_print)
         aPopulation.next_generation()
         bPopulation.next_generation()
         cPopulation.next_generation()
