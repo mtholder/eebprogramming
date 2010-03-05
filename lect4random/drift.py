@@ -82,6 +82,15 @@ class Population(object):
         outp.write(msg)
 
 
+def parse_paup_tree_dist(f):
+    for line in f:
+        if line.startswith('Distance'):
+            spl = line.split()
+            if spl[1] == '-':
+                distances = spl[2:]
+                return distances.index('0')
+
+
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser(description="Simulator of drift in allele frequencies in a simple four-species tree.")
@@ -210,10 +219,23 @@ if __name__ == '__main__':
             outp.close()
 
         if options.run_paup:
+            alltrees = open("all.tre", "w")
+            alltrees.write("#NEXUS\nbegin trees;\n tree ab = [&U] (A,B,(C,D));\n tree ac = [&U] (A,C,(B,D));\n tree ad = [&U] (A,D,(B,C));\nend;\n")
+            alltrees.close()
+
             outp = open(nexus_fn, 'a')
             tree_fn = options.distances + '.tre'
             outp.write("UPGMA treefile = %(fn)s;\n" % {'fn' : tree_fn})
+            outp.write("deroot;\n")
+            outp.write("gettrees file= all.tre mode= 7;\n")
+            outp.write("treedist from=1;\n")
             outp.close()
+
             import subprocess
-            paup = subprocess.Popen(['paup', '-n', nexus_fn])
+            paup = subprocess.Popen(['paup', '-n', nexus_fn], stdout=subprocess.PIPE)
             paup.wait()
+            tree_index = parse_paup_tree_dist(paup.stdout)
+            if tree_index == 0:
+                print "Got the correct tree"
+            else:
+                print "Got the wrong tree"
