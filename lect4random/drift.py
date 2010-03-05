@@ -41,6 +41,7 @@ End;
         outp.write(" ".join(words))
         outp.write("\n")
     outp.write(";\nEnd;\n")
+
 def calc_freq_dist(one_p_list, other_p_list):
     "Returns the Euclidean distance between two vectors"
     diff = 0.0
@@ -114,6 +115,11 @@ if __name__ == '__main__':
                       type='str',
                       default=None,
                       help="Optional name of a file to store pairwise distances.")
+    parser.add_option('-p', '--paup',
+                      dest='run_paup',
+                      action="store_true",
+                      default=False,
+                      help="Run UPGMA with PAUP on distance data")
     options, args = parser.parse_args(sys.argv)
     try:
         allele_counts = []
@@ -184,7 +190,8 @@ if __name__ == '__main__':
     output_stream.write("\n")
 
     if options.distances:
-        outp = open(options.distances, 'w')
+        nexus_fn = options.distances
+        outp = open(nexus_fn, 'w')
         try:
             allele_freq_list = []
             for pop in [aPopulation, bPopulation, cPopulation, dPopulation]:
@@ -201,3 +208,12 @@ if __name__ == '__main__':
             write_nexus_distances(outp, dist_mat, labels=["A", "B", "C", "D"])
         finally:
             outp.close()
+
+        if options.run_paup:
+            outp = open(nexus_fn, 'a')
+            tree_fn = options.distances + '.tre'
+            outp.write("UPGMA treefile = %(fn)s;\n" % {'fn' : tree_fn})
+            outp.close()
+            import subprocess
+            paup = subprocess.Popen(['paup', '-n', nexus_fn])
+            paup.wait()
