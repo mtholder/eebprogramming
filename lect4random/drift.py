@@ -11,7 +11,12 @@ def debug(m):
 
 def select_random_index(probabilities):
     "Returns an index in proportion to its probability"
-    return 0
+    u = RNG.random()
+    for n, p in enumerate(probabilities):
+        u = u - p
+        if u < 0.0:
+            return n
+    return n
 
 class Population(object):
     """An evolving population of organisms  -- really just a collection of alleles
