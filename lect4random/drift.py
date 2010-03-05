@@ -27,6 +27,20 @@ Begin Taxa;
     taxlabels %(taxlabels)s;
 End;
 """ % {'num_tax' : len(labels), 'taxlabels' : " ".join(labels)})
+    outp.write("""Begin Distances;
+    Format Triangle = Both;
+    Matrix
+""")
+    assert(len(dist_mat) == len(labels))
+    for n, row in enumerate(dist_mat):
+        curr_label = labels[n]
+        words = [curr_label]
+        for freq_float in row:
+            freq_str = "%(freq).4f" % {'freq' : freq_float}
+            words.append(freq_str)
+        outp.write(" ".join(words))
+        outp.write("\n")
+    outp.write(";\nEnd;\n")
 def calc_freq_dist(one_p_list, other_p_list):
     "Returns the Euclidean distance between two vectors"
     diff = 0.0
