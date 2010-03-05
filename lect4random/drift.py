@@ -1,5 +1,12 @@
 #!/usr/bin/env python
 import sys
+
+VERBOSE_MODE = False
+def debug(m):
+    "We should probably use the logging module for this"
+    if VERBOSE_MODE:
+        sys.stderr.write("%(script)s: %(msg)s\n" % {'script' : sys.argv[0], 'msg' : m})
+
 class Population(object):
     """An evolving population of organisms  -- really just a collection of alleles
     is enough for our purposes (hermaphroditic reproduction).
@@ -15,6 +22,11 @@ class Population(object):
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser(description="Simulator of drift in allele frequencies in a simple four-species tree.")
+    parser.add_option('-v', '--verbose',
+                      dest='verbose',
+                      action="store_true",
+                      default=False,
+                      help="Verbose execution mode")
     parser.add_option('-i', '--internal-branch',
                       dest='internal',
                       type='int',
@@ -39,13 +51,14 @@ if __name__ == '__main__':
         sys.exit("The number of generations for the terminal branches must be non-negative")
     if options.internal < 0:
         sys.exit("The number of generations for the terminal branches must be non-negative")
-
+    if options.verbose:
+        VERBOSE_MODE = True
     # create the population that will be the parents of species a and b
     abParPop = Population(allele_counts)
     # create the population that will be the parents of species a and b
     cdParPop = Population(allele_counts)
     for i in xrange(options.internal):
-        print i
+        debug("internal generation %(gen)d" % {'gen' : i })
         abParPop.next_generation()
         cdParPop.next_generation()
     aPopulation = Population(abParPop.allele_counts)
@@ -53,7 +66,7 @@ if __name__ == '__main__':
     cPopulation = Population(cdParPop.allele_counts)
     dPopulation = Population(cdParPop.allele_counts)
     for i in xrange(options.terminal):
-        print i
+        debug("terminal generation %(gen)d" % {'gen' : i })
         aPopulation.next_generation()
         bPopulation.next_generation()
         cPopulation.next_generation()
