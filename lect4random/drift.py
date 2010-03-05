@@ -7,7 +7,10 @@ class Population(object):
     def __init__(self, allele_counts):
         self.n = sum(allele_counts)
         self.allele_counts = allele_counts
-
+    def next_generation(self):
+        pass
+    def write_frequencies(self, outp):
+        pass
 
 if __name__ == '__main__':
     from optparse import OptionParser
@@ -37,4 +40,33 @@ if __name__ == '__main__':
     if options.internal < 0:
         sys.exit("The number of generations for the terminal branches must be non-negative")
 
+    # create the population that will be the parents of species a and b
+    abParPop = Population(allele_counts)
+    # create the population that will be the parents of species a and b
+    cdParPop = Population(allele_counts)
+    for i in xrange(options.internal):
+        print i
+        abParPop.next_generation()
+        cdParPop.next_generation()
+    aPopulation = Population(abParPop.allele_counts)
+    bPopulation = Population(abParPop.allele_counts)
+    cPopulation = Population(cdParPop.allele_counts)
+    dPopulation = Population(cdParPop.allele_counts)
+    for i in xrange(options.terminal):
+        print i
+        aPopulation.next_generation()
+        bPopulation.next_generation()
+        cPopulation.next_generation()
+        dPopulation.next_generation()
+
+    output_stream = sys.stdout
+    output_stream.write("A ")
+    aPopulation.write_frequencies(output_stream)
+    output_stream.write("\nB ")
+    bPopulation.write_frequencies(output_stream)
+    output_stream.write("\nC ")
+    cPopulation.write_frequencies(output_stream)
+    output_stream.write("\nD ")
+    dPopulation.write_frequencies(output_stream)
+    output_stream.write("\n")
 
