@@ -119,7 +119,11 @@ if __name__ == '__main__':
                 _LOG.debug(taxon.label + ' ' + str(chars))
             for tree in tree_list:
                 _LOG.debug(str(tree))
-                print pars_score_tree(tree, taxon_to_state_set)
+                print pars_score_tree(tree, taxon_to_state_set, [   [0, 5, 1, 5],
+                                                                    [5, 0, 5, 1],
+                                                                    [1, 5, 0, 5],
+                                                                    [5, 1, 5, 0],
+                                                                ])
     except Exception as x:
         if _DEBUGGING:
             raise
