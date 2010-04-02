@@ -33,8 +33,21 @@ def sankoff(postorder_node_list, taxa_to_state_set_map, step_matrix):
             _LOG.debug(nd.taxon.label + ' -> ' + str(nd.char_costs))
 
         else:
+            child_list = nd.child_nodes()
+            char_costs = []
+            num_patterns = len(child_list[0].char_costs)
+            for pattern_index in xrange(num_patterns):
+                child_costs = []
+                for c in child_list:
+                    child_costs.append(c.char_costs[pattern_index])
+                el = []
+                for anc_state in xrange(num_states):
+                    c = get_min_cost(step_matrix[anc_state], child_costs)
+                    el.append(c)
+                char_costs.append(el)
+            nd.char_costs = char_costs
 
-            print "calc min costs for each state for an internal node"
+            _LOG.debug('Internal node -> ' + str(nd.char_costs))
             if not nd.parent_node:
                 print "find the minimum cost at the root"
     return score
