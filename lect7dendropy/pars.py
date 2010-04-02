@@ -5,7 +5,24 @@ _LOG = get_logger('sankoff')
 from dendropy import DataSet
 _DEBUGGING = True
 
+
+
 verbose = False
+
+def sankoff(node_list, taxa_to_states, step_matrix):
+    return 0
+
+
+def pars_score_tree(tree, taxa_to_states, step_matrix=None):
+    if step_matrix is None:
+        step_matrix = [ [0, 1, 1, 1],
+                        [1, 0, 1, 1],
+                        [1, 1, 0, 1],
+                        [1, 1, 1, 0],
+                    ]
+    node_list = [i for i in tree.postorder_node_iter()]
+    return sankoff(node_list, taxa_to_states, step_matrix)
+
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
@@ -49,6 +66,7 @@ if __name__ == '__main__':
                 _LOG.debug(taxon.label + ' ' + str(chars))
             for tree in tree_list:
                 _LOG.debug(str(tree))
+                print pars_score_tree(tree, taxon_to_state_set)
     except Exception as x:
         if _DEBUGGING:
             raise
