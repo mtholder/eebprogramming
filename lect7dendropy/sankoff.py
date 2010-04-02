@@ -94,7 +94,7 @@ if __name__ == '__main__':
 
             if len(dataset.tree_lists) != 1:
                 raise ValueError("Expecting one tree block in %s" % f)
-            tree_list = dataset.tree_lists
+            tree_list = dataset.tree_lists[0]
 
             if len(dataset.char_matrices) != 1:
                 raise ValueError("Expecting one character matrix in %s" % f)
@@ -103,7 +103,7 @@ if __name__ == '__main__':
             num_char = len(char_mat[0])
             taxon_to_state_set = char_mat.create_taxon_to_state_set_map()
 
-            for n, tree in enumerate(tree_list[0]):
+            for n, tree in enumerate(tree_list):
                 p_score = pars_score_tree(tree, taxon_to_state_set)
                 print "Tree", n+1, p_score
 
