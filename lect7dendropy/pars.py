@@ -8,7 +8,8 @@ _DEBUGGING = True
 
 
 verbose = False
-
+def get_min_cost(cost_row, child_costs):
+    return 0
 def sankoff(postorder_node_list, taxa_to_state_set_map, step_matrix):
     max_cost = 0
     num_states = len(step_matrix)
