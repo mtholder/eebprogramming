@@ -37,6 +37,9 @@ if __name__ == '__main__':
 
             for taxon, chars in taxon_to_state_set.iteritems():
                 print taxon.label, str(chars)
+            for tree in tree_list:
+                print tree
+                print dir(tree)
     except Exception as x:
         if _DEBUGGING:
             raise
