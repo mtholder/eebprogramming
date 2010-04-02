@@ -1,16 +1,26 @@
 #!/usr/bin/env python
-import sys
+import sys, logging
 from dendropy.utility.messaging import get_logger
 _LOG = get_logger('sankoff')
 from dendropy import DataSet
 _DEBUGGING = True
+
 verbose = False
 if __name__ == '__main__':
     from optparse import OptionParser
     parser = OptionParser()
+    parser.add_option('-v', '--verbose',
+                  dest='verbose',
+                  action="store_true",
+                  default=False,
+                  help="Verbose execution mode")
+
     (options, args) = parser.parse_args()
     if len(args) == 0:
         sys.exit("Expecting a filename as an argument")
+
+    if options.verbose:
+        _LOG.setLevel(logging.DEBUG)
 
     tree_index = 0
 
@@ -36,10 +46,9 @@ if __name__ == '__main__':
             taxon_to_state_set = char_mat.create_taxon_to_state_set_map()
 
             for taxon, chars in taxon_to_state_set.iteritems():
-                print taxon.label, str(chars)
+                _LOG.debug(taxon.label + ' ' + str(chars))
             for tree in tree_list:
-                print tree
-                print dir(tree)
+                _LOG.debug(str(tree))
     except Exception as x:
         if _DEBUGGING:
             raise
