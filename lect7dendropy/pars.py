@@ -10,11 +10,30 @@ _DEBUGGING = True
 verbose = False
 
 def sankoff(postorder_node_list, taxa_to_state_set_map, step_matrix):
+    max_cost = 0
+    num_states = len(step_matrix)
+    for row in step_matrix:
+        for cell in row:
+            if cell > max_cost:
+                max_cost = cell
+    impossible_cost = 1 + max_cost
+    impossible_cost_row = [impossible_cost] * num_states
+
     score = 0
     for nd in postorder_node_list:
         if nd.is_leaf():
-            print "fill in costs for leaf", nd.taxon.label
+            char_costs = []
+            for char_ss in taxa_to_state_set_map[nd.taxon]:
+                el = list(impossible_cost_row)
+                for observed_state in char_ss:
+                    el[observed_state] = 0
+                char_costs.append(el)
+            nd.char_costs = char_costs
+
+            _LOG.debug(nd.taxon.label + ' -> ' + str(nd.char_costs))
+
         else:
+
             print "calc min costs for each state for an internal node"
             if not nd.parent_node:
                 print "find the minimum cost at the root"
