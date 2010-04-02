@@ -9,7 +9,13 @@ _DEBUGGING = True
 
 verbose = False
 def get_min_edge_costs(cost_row, costs_for_one_child):
-    return 0
+    min_score = step_mat_row[0] + child_costs[0]
+    for i in xrange(1, len(step_mat_row)):
+        y = step_mat_row[i] + child_costs[i]
+        if y < min_score:
+            min_score = y
+    return min_score
+
 def get_min_cost(step_mat_row, child_costs):
     total_cost = 0
     for e in child_costs:
