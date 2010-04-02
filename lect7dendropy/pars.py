@@ -50,7 +50,8 @@ def sankoff(postorder_node_list, taxa_to_state_set_map, step_matrix):
 
             _LOG.debug('Internal node -> ' + str(nd.char_costs))
             if not nd.parent_node:
-                print "find the minimum cost at the root"
+                for pattern_index in xrange(num_patterns):
+                    score += min(nd.char_costs[pattern_index])
     return score
 
 def pars_score_tree(tree, taxa_to_states, step_matrix=None):
