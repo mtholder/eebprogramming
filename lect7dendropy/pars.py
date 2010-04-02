@@ -9,9 +9,16 @@ _DEBUGGING = True
 
 verbose = False
 
-def sankoff(node_list, taxa_to_states, step_matrix):
-    return 0
-
+def sankoff(postorder_node_list, taxa_to_state_set_map, step_matrix):
+    score = 0
+    for nd in postorder_node_list:
+        if nd.is_leaf():
+            print "fill in costs for leaf", nd.taxon.label
+        else:
+            print "calc min costs for each state for an internal node"
+            if not nd.parent_node:
+                print "find the minimum cost at the root"
+    return score
 
 def pars_score_tree(tree, taxa_to_states, step_matrix=None):
     if step_matrix is None:
