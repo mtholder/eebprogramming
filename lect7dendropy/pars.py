@@ -35,7 +35,8 @@ if __name__ == '__main__':
             num_char = len(char_mat[0])
             taxon_to_state_set = char_mat.create_taxon_to_state_set_map()
 
-            print taxon_to_state_set
+            for taxon, chars in taxon_to_state_set.iteritems():
+                print taxon.label, str(chars)
     except Exception as x:
         if _DEBUGGING:
             raise
