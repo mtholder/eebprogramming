@@ -1,11 +1,10 @@
 #!/usr/bin/env python
 import sys
 from dendropy.utility.messaging import get_logger
-from dendropy.treecalc import fitch_down_pass, fitch_up_pass
+_LOG = get_logger('sankoff')
 from dendropy import DataSet
 from dendropy.utility.error import DataParseError
 _DEBUGGING = True
-_LOG = get_logger('sankoff')
 verbose = False
 
 def get_min_edge_costs(step_mat_row, child_costs):
@@ -16,10 +15,11 @@ def get_min_edge_costs(step_mat_row, child_costs):
             min_score = y
     return min_score
 
-def get_min_cost(step_mat_row, left_costs, right_costs):
-    lc =  get_min_edge_costs(step_mat_row, left_costs)
-    rc = get_min_edge_costs(step_mat_row, right_costs)
-    return lc + rc
+def get_min_cost(step_mat_row, child_costs):
+    total_cost = 0
+    for e in child_costs:
+        total_cost = total_cost + get_min_edge_costs(step_mat_row, e)
+    return total_cost
 
 def sankoff(postorder_node_list, step_matrix, taxa_to_state_set_map):
     max_cost = 0
@@ -41,16 +41,17 @@ def sankoff(postorder_node_list, step_matrix, taxa_to_state_set_map):
                 char_costs.append(el)
             nd.char_costs = char_costs
         else:
-            assert len(nd.child_nodes()) == 2
-            left_c, right_c = nd.child_nodes()
+            assert len(nd.child_nodes()) > 1
+            child_list = nd.child_nodes()
             char_costs = []
-            num_patterns = len(left_c.char_costs)
+            num_patterns = len(child_list[0].char_costs)
             for pattern_index in xrange(num_patterns):
-                left_costs = left_c.char_costs[pattern_index]
-                right_costs = right_c.char_costs[pattern_index]
+                child_costs = []
+                for c in child_list:
+                    child_costs.append(c.char_costs[pattern_index])
                 el = []
                 for anc_state in xrange(num_states):
-                    c = get_min_cost(step_matrix[anc_state], left_costs, right_costs)
+                    c = get_min_cost(step_matrix[anc_state], child_costs)
                     el.append(c)
                 char_costs.append(el)
             nd.char_costs = char_costs
@@ -60,9 +61,7 @@ def sankoff(postorder_node_list, step_matrix, taxa_to_state_set_map):
                     score += min(nd.char_costs[pattern_index])
     return score
 
-def score_tree(tree, taxa_to_states, step_matrix=None):
-    if not tree.is_rooted:
-        raise ValueError("Tree must be rooted")
+def pars_score_tree(tree, taxa_to_states, step_matrix=None):
     if step_matrix is None:
         step_matrix =  [ [0, 1, 1, 1],
                 [1, 0, 1, 1],
@@ -71,14 +70,7 @@ def score_tree(tree, taxa_to_states, step_matrix=None):
             ]
     root = tree.seed_node
     root_children = root.child_nodes()
-    if len(root_children) != 2:
-        raise ValueError("Expecting a binary rooted tree.  Root has more than 2 children!")
     node_list = [i for i in tree.postorder_node_iter()]
-    for nd in node_list:
-        c = nd.child_nodes()
-        if c:
-            if len(c) != 2:
-                raise ValueError("Tree must be fully resolved")
     return sankoff(node_list, step_matrix=step_matrix, taxa_to_state_set_map=taxa_to_states)
 
 if __name__ == '__main__':
@@ -94,23 +86,27 @@ if __name__ == '__main__':
         for f in args:
             fo = open(f, "rU")
             dataset = DataSet()
-            try:
-                dataset.read(stream=fo, schema="NEXUS")
-            except DataParseError as dfe:
-                raise ValueError(str(dfe))
+            dataset.read(stream=fo, schema="NEXUS")
+
             if len(dataset.taxon_sets) != 1:
                 raise ValueError("Expecting one set of taxa in %s" % f)
+            taxon_set = dataset.taxon_sets[0]
+
             if len(dataset.tree_lists) != 1:
                 raise ValueError("Expecting one tree block in %s" % f)
+            tree_list = dataset.tree_lists
+
             if len(dataset.char_matrices) != 1:
                 raise ValueError("Expecting one character matrix in %s" % f)
             char_mat = dataset.char_matrices[0]
+
             num_char = len(char_mat[0])
-            taxon_set = dataset.taxon_sets[0]
             taxon_to_state_set = char_mat.create_taxon_to_state_set_map()
-            for n, tree in enumerate(dataset.tree_lists[0]):
-                p_score = score_tree(tree, taxon_to_state_set)
+
+            for n, tree in enumerate(tree_list[0]):
+                p_score = pars_score_tree(tree, taxon_to_state_set)
                 print "Tree", n+1, p_score
+
     except Exception as x:
         if _DEBUGGING:
             raise
